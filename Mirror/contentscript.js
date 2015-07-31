@@ -2,10 +2,10 @@ var context_id = -1;
 
 console.log("Initializing Mirror");
 
-// document.onkeydown = function() {
-//   console.log("Key pressed: " + event.keyCode);    
-//   chrome.tabs.executeScript(null,{code:"$('video').pause()}")   
-// };
+document.onkeydown = function() {
+    //console.log("Key pressed: " + event.keyCode);
+    chrome.runtime.sendMessage({keyEvent: event.keyCode})
+};
 
 //------------------------------------------/
 
@@ -17,9 +17,3 @@ s.onload = function() {
 };
 
 // Event listener
-document.addEventListener('RW759_connectExtension', function(e) {
-    // e.detail contains the transferred data (can be anything, ranging
-    // from JavaScript objects to strings).
-    // Do something, for example:
-    alert(e.detail);
-});

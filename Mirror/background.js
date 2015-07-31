@@ -1,20 +1,41 @@
-import utils;
-import socket.io;
 
-int socketId = null;
-chrome.sockets.tcp.create({}, function(createInfo){
-	socketId = createInfo.socketId;
-	chrome.sockets.tcp.connect(socketId, localhost, 9090, function(socketInfo){
 
-	});
+var userName = 'user_x';
+
+var socket = io.connect('http://localhost:9090');
+var socketId = 1001;
+
+console.log("Attempting to Connect");
+socket.on('connect', function() {
+	console.log("Connection Established");
+
 });
 
-document.onkeydown = function() {
-  console.log("Key pressed: " + event.keyCode); 
-  var buf = str2ab(event.keyCode) ; 
-  chrome.sockets.tcp.send(socketId, data)  
-};
+socket.on('message', function(data){
+	console.log('Data received: ' + data.action);
+});
 
-chrome.sockets.tcp.onReceive.addListener(function(info){
-	console.log(ab2str(info.data));
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
+	console.log(message);
+	console.log("Key pressed: " + message.keyEvent);
+	var keyDown = message.keyEvent;
+	var jsonObject = {
+		'@class': 'UserObject',
+		userName: userName,
+		socketId: socketId,
+		action: keyDown
+	};
+	socket.json.send(jsonObject);
 })
+
+document.onkeydown = function() {
+	console.log("Key pressed: " + event.keyCode);
+	var keyDown = event.keyCode;
+	var jsonObject = {'@class': 'UserObject',
+		userName: userName,
+		socketId: socketId,
+		action: keyDown
+	};
+
+
+};

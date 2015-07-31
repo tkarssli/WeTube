@@ -6,13 +6,10 @@
   "permissions": [
     "tabs"
   ],
+  "web_accessible_resources": ["script.js"],
   "background": {
-    "scripts": ["background.js"]
-  },
-  "sockets": {
-    "tcp": {
-      "connect": ["*:*"]
-    }
+    "scripts": [
+      "socket.io.js","background.js"]
   },
   "content_scripts": [{
     "matches":[
@@ -26,8 +23,8 @@
       "type": "",
       "id": "mirror",
       "description": "Shared webpage interaction",  // A user visible description
-      "language": "en-US",  // The primary language this IME is used for
-      "layouts": ["us::eng"]  // The supported keyboard layouts for this IME
+      "language": "en-US",  // The primary language
+      "layouts": ["us::eng"]  // The supported keyboard layouts
     }
   ]
 }
