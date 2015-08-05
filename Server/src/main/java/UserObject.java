@@ -1,22 +1,24 @@
+import java.util.UUID;
+
 /**
  * Created by Tamir on 7/23/2015.
  */
 public class UserObject {
 
-
-
     private String userName;
-    private String action;
-    private String socketId;
+    private UUID sessionId, uuid, connectedUser;
 
     public UserObject(){
+        this.uuid = UUID.randomUUID();
+        this.userName = null;
+        this.sessionId = null;
+        this.connectedUser = null;
     }
 
-    public UserObject(String userName, String action, String socketId){
+    public UserObject(String userName, UUID sessionId){
         super();
         this.userName = userName;
-        this.action = action;
-        this.socketId = socketId;
+        this.sessionId = sessionId;
     }
 
     public String getUserName() {
@@ -27,19 +29,23 @@ public class UserObject {
         this.userName = userName;
     }
 
-    public String getAction() {
-        return action;
+    public UUID getSessionId() {
+        return sessionId;
     }
 
-    public void setAction(String action) {
-        this.action = action;
+    public void setSessionId(UUID sessionId) {
+        this.sessionId = sessionId;
     }
 
-    public String getSocketId() {
-        return socketId;
+    public UUID getUuid(){
+        return uuid;
     }
 
-    public void setSocketId(String socketId) {
-        this.socketId = socketId;
+    public UUID getConnectedUser(){
+        return connectedUser;
+    }
+
+    public void setConnectedUser(UUID uuid){
+        this.connectedUser = uuid;
     }
 }

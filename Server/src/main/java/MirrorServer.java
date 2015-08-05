@@ -1,8 +1,8 @@
 /**
  * Created by Tamir on 7/23/2015.
+ *
+ * Mirror Server
  */
-
-
 
 import com.corundumstudio.socketio.AckRequest;
 import com.corundumstudio.socketio.Configuration;
@@ -12,6 +12,9 @@ import com.corundumstudio.socketio.listener.DataListener;
 
 
 public class MirrorServer {
+    
+    private final static String SERVERADDRESS = "localhost";
+    private final static int PORT = 9090;
 
     /**
      * Runs the server.
@@ -19,18 +22,22 @@ public class MirrorServer {
     public static void main(String[] args) throws InterruptedException {
 
         Configuration config = new Configuration();
-        config.setHostname("localhost");
-        config.setPort(9090);
+        config.setHostname(SERVERADDRESS);
+        config.setPort(PORT);
 
         final SocketIOServer server = new SocketIOServer(config);
 
-        server.addEventListener("message", UserObject.class, new DataListener<UserObject>() {
+        final UserHandler userHandler = new UserHandler();
+        final ConnectionHandler connectionHandler = new ConnectionHandler(userHandler, server);
+
+
+
+
+        server.addEventListener("connected", UserObject.class, new DataListener<UserObject>() {
             @Override
-            public void onData(SocketIOClient client, UserObject data, AckRequest ackRequest) throws Exception {
-                UserObject receivedData = data;
-                receivedData.setAction("You pressed the key: " + receivedData.getAction());
-                System.out.println("Data received from: " + receivedData.getUserName());
-                server.getBroadcastOperations().sendEvent("message", receivedData);
+            public void onData(SocketIOClient client, UserObject user, AckRequest ackRequest) throws Exception {
+                System.out.println("User connected " + user.getUserName());
+                connectionHandler.connectUser(user, client.getSessionId());
 
             }
         });
