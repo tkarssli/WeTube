@@ -13,8 +13,8 @@
   },
   "content_scripts": [{
     "matches":[
-      "http://*/*",
-      "https://*/*"],
+      "http://www.youtube.com/*",
+      "https://www.youtube.com/*"],
     "js": ["contentscript.js"]
   }],
   "input_components": [

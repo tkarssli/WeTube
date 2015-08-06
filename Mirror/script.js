@@ -1,6 +1,9 @@
-//setTimeout(function() {
-//    /* Example: Send data to your Chrome extension*/
-//    document.dispatchEvent(new CustomEvent('RW759_connectExtension', {
-//        detail: "GLOBALS" // Some variable from Gmail.
-//    }));
-//}, 0);
+$('video').on('play',function(){
+    playEvent();
+})
+
+var playEvent = function() {
+    var event = document.createEvent('Event');
+    event.initEvent('playEvent');
+    document.dispatchEvent(event);
+}

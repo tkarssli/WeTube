@@ -21,5 +21,22 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+                    <plugin>
+                        <groupId>com.heroku.sdk</groupId>
+                        <artifactId>heroku-maven-plugin</artifactId>
+                        <version>0.4.4</version>
+                        <configuration>
+                            <appName>peaceful-dawn-6588</appName>
+                            <processTypes>
+                                <web>java $JAVA_OPTS -cp target/classes:target/dependency/* MirrorServer</web>
+                            </processTypes>
+                        </configuration>
+                    </plugin>
+        </plugins>
+
+    </build>
+
 
 </project>

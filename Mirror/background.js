@@ -1,7 +1,9 @@
+var HEROKU = 'http://peaceful-dawn-6588.herokuapp.com';
+var LOCAL = 'http://localhost:9090'
 
 var userName = 'user_x';
 
-var socket = io.connect('http://localhost:9090');
+var socket = io.connect(LOCAL);
 var socketId = 1001;
 
 

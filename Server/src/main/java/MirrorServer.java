@@ -10,23 +10,43 @@ import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.DataListener;
 
+import java.io.Console;
+import java.util.Map;
+
 
 public class MirrorServer {
     
-    private final static String SERVERADDRESS = "localhost";
-    private final static int PORT = 9090;
+    private static final String SERVERADDRESS = "0.0.0.0";
+    private static int PORT = 0;
 
     /**
      * Runs the server.
      */
     public static void main(String[] args) throws InterruptedException {
 
+        // Get Port environment variable for Heroku
+        Map<String,String> env = System.getenv();
+        try {
+            PORT = Integer.parseInt(env.get("PORT"));
+        } catch(NumberFormatException e){
+            System.out.println("Hosted locally, port set to 9090");
+            PORT = 9090;
+        }
+
+        // Server Config
         Configuration config = new Configuration();
         config.setHostname(SERVERADDRESS);
         config.setPort(PORT);
-
         final SocketIOServer server = new SocketIOServer(config);
 
+        // Start thread to allow for I/O in console if console exists
+        if (!(System.console() == null)) {
+            consoleIoThread ioThread = new consoleIoThread(server);
+            ioThread.start();
+        } else {System.out.println("No Console.");}
+
+
+        // Handlers
         final UserHandler userHandler = new UserHandler();
         final ConnectionHandler connectionHandler = new ConnectionHandler(userHandler, server);
 
@@ -49,43 +69,53 @@ public class MirrorServer {
         server.stop();
 
 
-//        try {
-//            while (true) {
-//                socket = listener.;
-//                System.out.println("Client Connected: " + socket.toString() );
-//
-//                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-//                BufferedReader in = new BufferedReader(
-//                        new InputStreamReader(
-//                                socket.getInputStream()));
-//                String inputLine, outputLine;
-//                outputLine = null;
-//                out.println("Start");
-//                try {while ((inputLine = in.readLine()) != null){
-//                    outputLine = inputLine + "-server";
-//                    out.println(outputLine);
-//                    if(inputLine.equals("bye")){
-//                        System.out.println("Closing Socket");
-//                        out.println("closing Socket");
-//                        break;
-//                    }
-//
-//                }
-//                    in.close();
-//                    out.close();
-//                    socket.close();
-//                }catch(IOException e){
-//                    System.err.println("Mimic Failed: " + e);
-//                }
-//
-//            }
-//        } catch(IOException e){
-//            System.err.println("Accept Failed");
-//            System.exit(1);
-//        }
-//        finally {
-//            listener.close();
-//
-//        }
+    }
+
+
+}
+
+// In the case that this is run from a console, simple commands for managing the server
+class consoleIoThread extends Thread {
+    private Console c;
+    private SocketIOServer server;
+    consoleIoThread(SocketIOServer server){
+        this.c = System.console();
+        this.server = server;
+    }
+
+    public void run() {
+        String[] commands = new String[] {"start", "stop", "restart","echo"};
+
+
+        while (true){
+            String input = c.readLine();
+            int index = -1;
+            for(int i=0; i < commands.length;i++){
+                if(input == commands[i]){
+                    index = i;
+                    break;
+                } else if ( i == commands.length -1){
+                    System.out.println("Enter a valid command;");
+                    for ( String s : commands){System.out.println(s);}
+                }
+
+            }
+            switch (index){
+                case 0:
+                    server.start();
+                    break;
+                case 1:
+                    server.stop();
+                    break;
+                case 2:
+                    server.stop();
+                    server.start();
+                    break;
+                case 3:
+                    System.out.println("Echoooooo");
+            }
+
+        }
+
     }
 }
