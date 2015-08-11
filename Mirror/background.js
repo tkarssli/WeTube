@@ -24,16 +24,43 @@ socket.on('message', function(data){
 
 
 
+
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-	console.log(message);
-	console.log("Key pressed: " + message.keyEvent);
-	var keyDown = message.keyEvent;
-	var jsonObject = {
-		'@class': 'UserObject',
-		userName: userName,
-		sessionId: socketId,
-		action: keyDown
-	};
-	socket.json.send(jsonObject);
+	// Create page action from contentscript
+	if(message.createPA){
+		chrome.pageAction.show(sender.tab.id)
+		console.log("Showing page action")
+
+	// Connect request from popup
+	} else if (message.connectRequest) {
+		console.log("Connect request")
+
+	// Key press event from injected script
+	} else if (message.keyEvent){
+		console.log("Key pressed: " + message.keyEvent);
+	}
+
+
 
 });
+
+//------------------------------------------/
+// Context Menu
+title = "Connect to user";
+context = "page";
+var showForPages = ["*://www.youtube.com/*"]
+genericOnClick = function(){
+	console.log("TESTES")
+};
+
+var parent = chrome.contextMenus.create({
+	"title": "Mirror",
+	"contexts":[context],
+	"onclick": genericOnClick,
+	"documentUrlPatterns": showForPages
+});
+
+
+
+
+

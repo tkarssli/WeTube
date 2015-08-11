@@ -9,6 +9,11 @@ import com.corundumstudio.socketio.Configuration;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.DataListener;
+import com.corundumstudio.socketio.listener.DisconnectListener;
+import handlers.ConnectionHandler;
+import handlers.UserHandler;
+import objects.Message;
+import objects.UserObject;
 
 import java.io.Console;
 import java.util.Map;
@@ -51,14 +56,26 @@ public class MirrorServer {
         final ConnectionHandler connectionHandler = new ConnectionHandler(userHandler, server);
 
 
-
-
+        // Add user to storage on connect
         server.addEventListener("connected", UserObject.class, new DataListener<UserObject>() {
             @Override
             public void onData(SocketIOClient client, UserObject user, AckRequest ackRequest) throws Exception {
-                System.out.println("User connected " + user.getUserName());
                 connectionHandler.connectUser(user, client.getSessionId());
+            }
+        });
 
+        server.addEventListener("message", Message.class, new DataListener<Message>() {
+            @Override
+            public void onData(SocketIOClient socketIOClient, Message message, AckRequest ackRequest) throws Exception {
+
+            }
+        });
+
+        // Clear user from storage on disconnect
+        server.addDisconnectListener(new DisconnectListener() {
+            @Override
+            public void onDisconnect(SocketIOClient client) {
+                connectionHandler.userDisconnected(client.getRemoteAddress());
             }
         });
 
@@ -68,10 +85,7 @@ public class MirrorServer {
 
         server.stop();
 
-
     }
-
-
 }
 
 // In the case that this is run from a console, simple commands for managing the server

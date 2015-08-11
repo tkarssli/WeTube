@@ -1,9 +1,24 @@
-$('video').on('play',function(){
-    playEvent();
-})
+v = $('video');
+var vElement = v.get(0);
 
-var playEvent = function() {
+
+// Event Listeners -------------------------- //
+v.on('play',function(){
+    dispatchEvent("playEvent");
+});
+v.on('pause', function(){
+    dispatchEvent("pauseEvent");
+});
+v.on('seeking', function(){
+    dispatchEvent("seekingEvent");
+});
+v.on('seeked', function(){
+    dispatchEvent("seekedEvent");
+});
+
+// Util functions -------------------------- //
+var dispatchEvent = function(string) {
     var event = document.createEvent('Event');
-    event.initEvent('playEvent');
+    event.initEvent(string);
     document.dispatchEvent(event);
-}
+};

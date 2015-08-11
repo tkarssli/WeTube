@@ -1,3 +1,6 @@
+package objects;
+
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -6,13 +9,18 @@ import java.util.UUID;
 public class UserObject {
 
     private String userName;
-    private UUID sessionId, uuid, connectedUser;
+    private UUID sessionId, connectedUser;
+    private int  userId,key;
+
+   final Random randGen = new Random();
 
     public UserObject(){
-        this.uuid = UUID.randomUUID();
+
+        this.userId = randGen.nextInt(10000)+10000;
         this.userName = null;
         this.sessionId = null;
         this.connectedUser = null;
+        this.key = randGen.nextInt(10000000)+ 10000000;
     }
 
     public UserObject(String userName, UUID sessionId){
@@ -37,8 +45,8 @@ public class UserObject {
         this.sessionId = sessionId;
     }
 
-    public UUID getUuid(){
-        return uuid;
+    public int getUserId(){
+        return userId;
     }
 
     public UUID getConnectedUser(){
@@ -47,5 +55,13 @@ public class UserObject {
 
     public void setConnectedUser(UUID uuid){
         this.connectedUser = uuid;
+    }
+
+    public int getKey() {
+        return key;
+    }
+
+    public void setKey() {
+        this.key = randGen.nextInt(10000000)+ 10000000;
     }
 }
