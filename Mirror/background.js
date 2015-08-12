@@ -8,6 +8,7 @@ var socketId = 1001;
 
 
 
+// Socket Listeners
 socket.on('connect', function(){
 	var userObject = {
 		userName: userName
@@ -20,10 +21,16 @@ socket.on('server', function(data){
 })
 
 socket.on('message', function(data){
+	var command = data.command;
+
+	chrome.runtime.sendMessage({keyEvent: event.keyCode})
+
+
 });
 
 
 
+// Browser Event Listeners
 
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 	// Create page action from contentscript
@@ -33,15 +40,12 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
 	// Connect request from popup
 	} else if (message.connectRequest) {
-		console.log("Connect request")
+
 
 	// Key press event from injected script
 	} else if (message.keyEvent){
 		console.log("Key pressed: " + message.keyEvent);
 	}
-
-
-
 });
 
 //------------------------------------------/

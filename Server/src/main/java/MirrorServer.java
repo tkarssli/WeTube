@@ -50,11 +50,15 @@ public class MirrorServer {
             ioThread.start();
         } else {System.out.println("No Console.");}
 
-
-        // Handlers
+        // Handlers --------------------------------------------------------------------------------------------------------//
         final UserHandler userHandler = new UserHandler();
         final ConnectionHandler connectionHandler = new ConnectionHandler(userHandler, server);
 
+        // Routers ---------------------------------------------------------------------------------------------------------//
+        final MessageRouter messageRouter = new MessageRouter(userHandler, server);
+
+
+        // Listeners -------------------------------------------------------------------------------------------------------//
 
         // Add user to storage on connect
         server.addEventListener("connected", UserObject.class, new DataListener<UserObject>() {
@@ -64,9 +68,13 @@ public class MirrorServer {
             }
         });
 
+        // Send incoming message to MessageRouter
         server.addEventListener("message", Message.class, new DataListener<Message>() {
             @Override
             public void onData(SocketIOClient socketIOClient, Message message, AckRequest ackRequest) throws Exception {
+
+                messageRouter.route(message);
+
 
             }
         });
@@ -78,6 +86,9 @@ public class MirrorServer {
                 connectionHandler.userDisconnected(client.getRemoteAddress());
             }
         });
+
+
+        // Start Server -------------------------------------------------------------------------------------------------------//
 
         server.start();
 

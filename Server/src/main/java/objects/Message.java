@@ -5,10 +5,12 @@ package objects;
  */
 public class Message {
     public final String command;
+    public final Boolean bool;
     public final int origin, target;
 
-    public Message(String command, int origin, int target) {
+    public Message(String command, boolean bool, int origin, int target) {
         this.command = command;
+        this.bool = bool;
         this.origin = origin;
         this.target = target;
     }

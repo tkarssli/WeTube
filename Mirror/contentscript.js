@@ -4,12 +4,12 @@ console.log("Initializing Mirror");
 //------------------------------------------/
 // Event Dispatchers
 
-// Create pageAction
+// create pageAction
 chrome.runtime.sendMessage({createPA: "createPA"});
 
-document.onkeydown = function() {
-    chrome.runtime.sendMessage({keyEvent: event.keyCode})
-};
+//document.onkeydown = function() {
+//    chrome.runtime.sendMessage({keyEvent: event.keyCode})
+//};
 
 //------------------------------------------/
 // Event listeners
@@ -26,7 +26,11 @@ document.addEventListener("pauseEvent", function (data) {
 
 //------------------------------------------/
 // Inject Javascript to current page
+
 function injectScript(script){
+
+    // Create script on current page, async is false because
+    // the jquery should load before the injected script.
     var s = document.createElement('script');
     s.async= false;
     s.src = chrome.extension.getURL(script);

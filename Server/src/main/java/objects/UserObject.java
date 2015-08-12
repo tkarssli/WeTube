@@ -9,8 +9,8 @@ import java.util.UUID;
 public class UserObject {
 
     private String userName;
-    private UUID sessionId, connectedUser;
-    private int  userId,key;
+    private UUID sessionId;
+    private int  userId,key, connectedUser;
 
    final Random randGen = new Random();
 
@@ -19,7 +19,7 @@ public class UserObject {
         this.userId = randGen.nextInt(10000)+10000;
         this.userName = null;
         this.sessionId = null;
-        this.connectedUser = null;
+        this.connectedUser = -1;
         this.key = randGen.nextInt(10000000)+ 10000000;
     }
 
@@ -49,12 +49,12 @@ public class UserObject {
         return userId;
     }
 
-    public UUID getConnectedUser(){
+    public int getConnectedUser(){
         return connectedUser;
     }
 
-    public void setConnectedUser(UUID uuid){
-        this.connectedUser = uuid;
+    public void setConnectedUser(int user){
+        this.connectedUser = user;
     }
 
     public int getKey() {
