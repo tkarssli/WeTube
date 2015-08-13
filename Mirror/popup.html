@@ -1,9 +1,17 @@
 <!doctype html>
 <head>
-  <script src="popup.js"></script>
+    <script src="popup.js"></script>
 </head>
 <html>
-    User Name: <input type="text" name="userName" id="userName"><br>
-    key: <input type="text" name="key" id="key"><br>
-    <input type="submit" id="button1" value="Submit">
+    <span id="userNameForm" hidden="hidden">
+        Enter your user name: <input type="text" id="userName"><br>
+        <input type="submit" id="button2" value="Submit">
+    </span>
+    <span id="connectForm" hidden="hidden">
+        User ID: <input type="text" name="userId" id="userId"><br>
+        key: <input type="text" name="key" id="key"><br>
+        <input type="submit" id="button1" value="Submit">
+
+    </span>
+
 </html>

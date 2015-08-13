@@ -72,10 +72,7 @@ public class MirrorServer {
         server.addEventListener("message", Message.class, new DataListener<Message>() {
             @Override
             public void onData(SocketIOClient socketIOClient, Message message, AckRequest ackRequest) throws Exception {
-
                 messageRouter.route(message);
-
-
             }
         });
 
@@ -87,7 +84,14 @@ public class MirrorServer {
             }
         });
 
-
+        // Receive connect request
+        server.addEventListener("connectRequest", Message.class, new DataListener<Message>() {
+            @Override
+            public void onData(SocketIOClient client, Message message, AckRequest ackRequest) throws Exception {
+                connectionHandler.formConnection(message);
+                System.out.println("Connect request received from " + message.origin);
+            }
+        });
         // Start Server -------------------------------------------------------------------------------------------------------//
 
         server.start();

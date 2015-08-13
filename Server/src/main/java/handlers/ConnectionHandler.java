@@ -12,6 +12,8 @@ import java.util.UUID;
 
 /**
  * Created by Tamir on 8/4/2015.
+ *
+ * Class for handling connections
  */
 
 
@@ -63,26 +65,37 @@ public class ConnectionHandler {
     }
     // process a request to connect with a user
     public void formConnection(Message request){
+        UserObject user1 = userHandler.getUser(request.origin);
+        UserObject user2 = userHandler.getUser(request.target);
+        try {
+            // Start connection by making sure target is available to connect to, or that origin isn't already connected, AND if user2 does not exists
+            if (userConnectionMap.containsKey(user1.getUserId()) || userConnectionMap.containsKey(user2.getUserId()) || user1.getUserId() == user2.getUserId())  {
+                // TODO send user who made connection message stating that a connection already exists, or a user cannot connect to themselves
+            } else {
 
-        int user1 = request.origin;
-        int user2 = request.target;
 
-        if (userConnectionMap.containsKey(user1) || userConnectionMap.containsKey(user2)){
-            // TODO send user who made connection message stating that a connection already exists
-        } else{
-            userConnectionMap.put(user1,user2);
+                // Check key is correct
+                if (request.key == user2.getKey()) {
+                    userConnectionMap.put(user1.getUserId(), user2.getUserId());
+                    userConnectionMap.put(user2.getUserId(), user1.getUserId());
+                    // Set connected users on userObjects
+                    user1.setConnectedUser(user2.getUserId());
+                    user2.setConnectedUser(user1.getUserId());
 
-            // Set connected users on userObjects
-            UserObject user1Object = userHandler.getUser(user1);
-            user1Object.setConnectedUser(user2);
-            UserObject user2Object = userHandler.getUser(user2);
-            user2Object.setConnectedUser(user1);
+                    // Send successful connect messages back to clients
+                    server.getClient(user1.getSessionId()).sendEvent("server", new Message("connectionResult", true, user1.getUserName(), user2.getUserName()));
+                    server.getClient(user2.getSessionId()).sendEvent("server", new Message("connectionResult", true, user2.getUserName(), user1.getUserName()));
+                    System.out.println(user1.getUserName() + " connected to " + user2.getUserName());
+                } else {
+                    // Send failed connection notice back
+                    server.getClient(user1.getSessionId()).sendEvent("server", new Message("connectionResult", false, user1.getUserName(), user2.getUserName()));
+                    System.out.println(user1.getUserName() + " failed to connect to " + user2.getUserName() + " because of a bad key!");
+                }
+            }
+        } catch( NullPointerException e){
+            server.getClient(user1.getSessionId()).sendEvent("server", new Message("connectionResult", false, user1.getUserName(), "Unknown"));
+            System.out.println(user1.getUserName() + " failed to connect to unknown user " + request.target);
 
-            // Send successful connect messages back to clients
-            server.getClient(user1Object.getSessionId()).sendEvent("server", new Message("connection", true, user1, user2));
-            server.getClient(user2Object.getSessionId()).sendEvent("server", new Message("connection", true, user2, user1));
-
-            System.out.println(userHandler.getUser(user1).getUserName() + " connected to " + userHandler.getUser(user2).getUserName());
         }
     }
 
@@ -93,14 +106,14 @@ public class ConnectionHandler {
 
         // Remove users from connection map
         userConnectionMap.remove(userId);
-        userConnectionMap.remove(user2);
+        userConnectionMap.remove(user2.getUserId());
 
         // Set connected user parameter to default
         user1.setConnectedUser(-1);
         user2.setConnectedUser(-1);
 
         // Send broken connect messages back to client that is still connected
-        server.getClient(user2.getSessionId()).sendEvent("server", new Message("connection", false, user2.getUserId(), user1.getUserId()));
+        server.getClient(user2.getSessionId()).sendEvent("server", new Message("connectionResult", false, user2.getUserId(), user1.getUserId()));
 
 
         System.out.println(user1.getUserName() + " disconnected from " + user2.getUserName());
