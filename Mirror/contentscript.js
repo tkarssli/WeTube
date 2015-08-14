@@ -15,12 +15,21 @@ chrome.runtime.sendMessage({createPA: "createPA"});
 // Event listeners
 
 document.addEventListener("playEvent", function (data) {
-    chrome.runtime.sendMessage({keyEvent: event.keyCode})
+    chrome.runtime.sendMessage( {videoEvent: {playEvent: true}})
     console.log("Play Event");
 });
 
 document.addEventListener("pauseEvent", function (data) {
     console.log("Pause Event");
+});
+
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
+    console.log("ConentScript.js: A Message has been received")
+    if (message.incomingVideoEvent){
+
+            console.log("ContentScript.js: Message is a Video Event")
+           dispatchEvent("playRequest")
+    }
 });
 
 
@@ -43,6 +52,13 @@ function injectScript(script){
 injectScript("jquery.min.js");
 setTimeout(injectScript("script.js"), 100);
 
+
+// Util functions -------------------------- //
+var dispatchEvent = function(string) {
+    var event = document.createEvent('Event');
+    event.initEvent(string);
+    document.dispatchEvent(event);
+};
 
 
 

@@ -16,6 +16,11 @@ v.on('seeked', function(){
     dispatchEvent("seekedEvent");
 });
 
+document.addEventListener("playRequest", function(data){
+    $('video').get(0).play();
+    console.log("External play request received");
+});
+
 // Util functions -------------------------- //
 var dispatchEvent = function(string) {
     var event = document.createEvent('Event');

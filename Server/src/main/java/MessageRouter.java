@@ -21,12 +21,12 @@ public class MessageRouter {
 
         // Get origin and target
         UserObject user1 = userHandler.getUser(message.origin);
-        UserObject user2 = userHandler.getUser(message.target);
+        UserObject user2 = userHandler.getUser(user1.getConnectedUser());
 
         String command = message.command;
 
         // Pass message from user1 to user2
-        server.getClient(user1.getSessionId()).sendEvent("message", message);
+        server.getClient(user2.getSessionId()).sendEvent("message", message);
 
         System.out.println(command + " command sent from " + user1.getUserName() + " to " + user2.getUserName());
 

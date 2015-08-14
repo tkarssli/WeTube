@@ -17,10 +17,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 	if (message.userNameSet){
 		clientUserName = message.userNameSet;
 
-		console.log("socket connecting")
 		socket = io.connect(LOCAL);
 
-		console.log("socket connected");
 		// Socket Listeners
 		socket.on('connect', function () {
 			var userObject = {
@@ -56,13 +54,13 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 			console.log(data);
 		});
 
-		socket.on('message', function (data) {
+		socket.on("message", function (data) {
 			var command = data.command;
-			var target = data.target;
-			var origin = data.origin;
-			var bool = data.bool;
 
-			chrome.runtime.sendMessage({keyEvent: event.keyCode})
+			console.log("Background.js: message received")
+			chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+				chrome.tabs.sendMessage(tabs[0].id, {incomingVideoEvent: command}, function(response) {});
+			});
 		});
 
 
@@ -77,7 +75,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 				chrome.pageAction.show(sender.tab.id);
 				console.log("Showing page action");
 
-				// Connect request from popup
+			// Connect request from popup
 			} else if (message.connectRequest) {
 				var message = {
 					target: parseInt(message.connectRequest.userId),
@@ -89,9 +87,9 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 				socket.emit("connectRequest", message);
 
 
-				// Key press event from injected script
-			} else if (message.keyEvent){
-				console.log("Key pressed: " + message.keyEvent);
+			// videoEvent from contentScript
+			} else if (message.videoEvent){
+				eventHandler(message.videoEvent);
 
 			} else if (message.getInfo){
 				chrome.runtime.sendMessage({userInfo:{userId: clientUserId, key: clientKey, userName: clientUserName, connectedUser: connectedUser}})
@@ -101,8 +99,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 
 //------------------------------------------/
 // Context Menu
-title = "Connect to user";
-context = "page";
+var title = "Connect to user";
+var context = "page";
 var showForPages = ["*://www.youtube.com/*"];
 
 var parent = chrome.contextMenus.create({
@@ -111,8 +109,30 @@ var parent = chrome.contextMenus.create({
 	"documentUrlPatterns": showForPages
 });
 
-})();
 
+
+
+//------------------------------------------/
+// Utility Functions
+
+var eventHandler = function(videoEvent){
+	var events = ["play","stop","seek","seeked"];
+
+	if(videoEvent.playEvent){
+		var message =
+		{command: events[0],
+		origin: parseInt(clientUserId)};
+
+		emitMessage(message);
+	}
+};
+
+var emitMessage = function(message){
+	socket.emit("message", message)
+};
+
+// Terminating brackets for main function
+})();
 
 
 
