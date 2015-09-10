@@ -1,6 +1,6 @@
 import com.corundumstudio.socketio.SocketIOServer;
 import handlers.UserHandler;
-import objects.Message;
+import objects.Event;
 import objects.UserObject;
 
 /**
@@ -8,27 +8,27 @@ import objects.UserObject;
  *
  * Class for passing commands between users
  */
-public class MessageRouter {
+public class EventRouter {
     private final UserHandler userHandler;
     private final SocketIOServer server;
 
-    public MessageRouter(UserHandler userHandler, SocketIOServer server) {
+    public EventRouter(UserHandler userHandler, SocketIOServer server) {
         this.userHandler = userHandler;
         this.server = server;
     }
 
-    public void route(Message message) {
+    public void route(Event event) {
 
         // Get origin and target
-        UserObject user1 = userHandler.getUser(message.origin);
+        UserObject user1 = userHandler.getUser(event.origin);
         UserObject user2 = userHandler.getUser(user1.getConnectedUser());
 
-        String command = message.command;
+        // String command = message.command;
 
         // Pass message from user1 to user2
-        server.getClient(user2.getSessionId()).sendEvent("message", message);
+        server.getClient(user2.getSessionId()).sendEvent("event", event);
 
-        System.out.println(command + " command sent from " + user1.getUserName() + " to " + user2.getUserName());
+        System.out.println("command sent from " + user1.getUserName() + " to " + user2.getUserName());
 
 
     }

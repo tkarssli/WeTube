@@ -2,7 +2,6 @@
 
 var HEROKU = 'http://peaceful-dawn-6588.herokuapp.com';
 var LOCAL = 'http://localhost:9090'
-var TSERVE = 'http://tserve.ddns.net:9090'
 
 var clientUserName = '';
 var clientUserId = 0;
@@ -18,7 +17,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 	if (message.userNameSet){
 		clientUserName = message.userNameSet;
 
-		socket = io.connect(TSERVE);
+		socket = io.connect(LOCAL);
 
 		// Socket Listeners
 		socket.on('connect', function () {
@@ -52,16 +51,18 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 
 			}
 
-			//console.log(data);
+			console.log(data);
 		});
 
 		socket.on("event", function (data) {
 
 			console.log("Background.js: message received")
-			chrome.tabs.query({active: true, url: "*://www.youtube.com/*"}, function(tabs){
+			chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
 				chrome.tabs.sendMessage(tabs[0].id, {incomingVideoEvent: data}, function(response) {});
 			});
 		});
+
+
 
 	}
 });
@@ -87,12 +88,24 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 
 			// videoEvent from contentScript
 			} else if (message.videoEvent){
-				console.log("Video event sending to handler");
+				console.log("Video event ending to handler");
 				eventHandler("videoEvent", message.videoEvent);
 
 			} else if (message.getInfo){
 				chrome.runtime.sendMessage({userInfo:{userId: clientUserId, key: clientKey, userName: clientUserName, connectedUser: connectedUser}})
 
+			} else if (message.playRequest){
+				console.log("Sending test request to server")
+				message = {command: "videoEvent",
+					origin: parseInt(clientUserId),
+					currentTime: parseInt(message.playRequest),
+					paused: false
+				};
+
+				console.log("emitting play request");
+				console.log(message);
+
+				socket.emit("videoEvent", message)
 			}
 		});
 
@@ -108,6 +121,11 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 		"documentUrlPatterns": showForPages
 	});
 
+
+
+
+
+
 	var eventHandler = function(eventType, videoEvent){
 		var events = ["videoEvent"];
 
@@ -122,10 +140,11 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 
 			};
 
-
 			emitEvent(message);
 		}
 	};
+
+
 
 	//------------------------------------------/
 	// Utility Functions
@@ -136,6 +155,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 	var emitEvent = function (event){
 		if (connectedUser != ""){
 			console.log("Emitting event to server");
+
 			socket.emit("videoEvent", event);
 		}
 	}

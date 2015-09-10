@@ -1,0 +1,43 @@
+{
+  "name": "M-Test",
+  "version": "0.1",
+  "manifest_version": 2,
+  "description": "Test for the Mirror extension",
+  "permissions": [
+    "tabs",
+    "contextMenus",
+    "declarativeContent"
+  ],
+  "icons": {
+    "16": "icon-large.png",
+    "48": "icon-large.png",
+    "128": "icon-large.png"
+  },
+  "web_accessible_resources": ["jquery.min.js","script.js"],
+  "background": {
+    "scripts": [
+      "socket.io.js","background.js"]
+  },
+  "page_action" :
+  {
+    "default_icon": "icon-large.png",
+    "default_title" : "Mirror - Test",
+    "default_popup" : "popup.html"
+  },
+  "content_scripts": [{
+    "matches":[
+      "http://www.youtube.com/*",
+      "https://www.youtube.com/*"],
+    "js": ["jquery.min.js","contentscript.js"]
+  }],
+  "input_components": [
+    {
+      "name": "Mirror",
+      "type": "",
+      "id": "mirror",
+      "description": "Shared webpage interaction",  // A user visible description
+      "language": "en-US",  // The primary language
+      "layouts": ["us::eng"]  // The supported keyboard layouts
+    }
+  ]
+}

@@ -12,8 +12,10 @@ import com.corundumstudio.socketio.listener.DataListener;
 import com.corundumstudio.socketio.listener.DisconnectListener;
 import handlers.ConnectionHandler;
 import handlers.UserHandler;
+import objects.Event;
 import objects.Message;
 import objects.UserObject;
+import objects.VideoEvent;
 
 import java.io.Console;
 import java.util.Map;
@@ -55,7 +57,7 @@ public class MirrorServer {
         final ConnectionHandler connectionHandler = new ConnectionHandler(userHandler, server);
 
         // Routers ---------------------------------------------------------------------------------------------------------//
-        final MessageRouter messageRouter = new MessageRouter(userHandler, server);
+        final EventRouter eventRouter = new EventRouter(userHandler, server);
 
 
         // Listeners -------------------------------------------------------------------------------------------------------//
@@ -68,11 +70,12 @@ public class MirrorServer {
             }
         });
 
-        // Send incoming message to MessageRouter
-        server.addEventListener("message", Message.class, new DataListener<Message>() {
+        // Send incoming message to EventRouter
+        server.addEventListener("videoEvent", VideoEvent.class, new DataListener<VideoEvent>() {
             @Override
-            public void onData(SocketIOClient socketIOClient, Message message, AckRequest ackRequest) throws Exception {
-                messageRouter.route(message);
+            public void onData(SocketIOClient socketIOClient, VideoEvent event, AckRequest ackRequest) throws Exception {
+                System.out.println("videoEvent Recevied");
+                eventRouter.route(event);
             }
         });
 
@@ -88,8 +91,8 @@ public class MirrorServer {
         server.addEventListener("connectRequest", Message.class, new DataListener<Message>() {
             @Override
             public void onData(SocketIOClient client, Message message, AckRequest ackRequest) throws Exception {
+                System.out.println("Connect request received from " + message.origin + " to target: " + message.target);
                 connectionHandler.formConnection(message);
-                System.out.println("Connect request received from " + message.origin);
             }
         });
         // Start Server -------------------------------------------------------------------------------------------------------//

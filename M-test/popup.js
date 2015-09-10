@@ -11,7 +11,7 @@ window.onload = function() {
 
   var connectForm = document.getElementById("connectForm");
   var userNameForm = document.getElementById("userNameForm");
-  var completedForm = document.getElementById("completedForm");
+  var testSpan = document.getElementById("testSpan");
 
   chrome.runtime.sendMessage({getInfo: true});
 
@@ -36,11 +36,8 @@ window.onload = function() {
           document.getElementById("userKey1").innerHTML = String(userKey);
           connectForm.removeAttribute("hidden");
         } else{
-          document.getElementById("userName").innerHTML = userName;
-          document.getElementById("userId2").innerHTML = String(userId);
-          document.getElementById("userKey2").innerHTML = String(userKey);
-          document.getElementById("connectedUser").innerHTML = connectedUser;
-          completedForm.removeAttribute("hidden");
+
+          testSpan.removeAttribute("hidden");
         }
       }
     } else if (message.connectionResult){
@@ -60,6 +57,15 @@ window.onload = function() {
     console.log(userName);
 
     location.reload();
+  });
+
+  document.getElementById("playButton").addEventListener("click", function(){
+
+    chrome.runtime.sendMessage({
+      playRequest: document.getElementById("currentTime").value
+    })
+      console.log("play request");
+      console.log(document.getElementById("currentTime").value)
   });
 
   document.getElementById("connectButton").addEventListener("click", function(){

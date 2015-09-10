@@ -1,5 +1,5 @@
 v = $('video');
-var vElement = v.get(0);
+player = v.get(0);
 
 
 // Event Listeners -------------------------- //
@@ -16,14 +16,20 @@ v.on('seeked', function(){
     dispatchEvent("seekedEvent");
 });
 
-document.addEventListener("playRequest", function(data){
-    $('video').get(0).play();
+document.addEventListener("videoData", function(data){
+    console.log(data.detail);
+    player.play();
+
+    player.currentTime = data.detail.currentTime;
+    player.paused = data.detail.paused;
+
+
     console.log("External play request received");
 });
 
 // Util functions -------------------------- //
 var dispatchEvent = function(string) {
-    var event = document.createEvent('Event');
+    var event = new CustomEvent(string, {'detail': {'currentTime': player.currentTime, 'duration': player.duration, 'paused': player.paused}});
     event.initEvent(string);
     document.dispatchEvent(event);
 };

@@ -18,7 +18,7 @@ document.addEventListener("playEvent", function (data) {
 
     //console.log("Content Script: " + data.detail.currentTime);
     chrome.runtime.sendMessage( {videoEvent: data});
-    //console.log("Play Event");
+    console.log("Play Event");
 });
 
 document.addEventListener("pauseEvent", function (data) {
@@ -26,12 +26,10 @@ document.addEventListener("pauseEvent", function (data) {
 });
 
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
-    console.log("ContentScript.js: A Message has been received");
+    console.log("ConentScript.js: A Message has been received")
     if (message.incomingVideoEvent){
-        console.log("ContentScript.js: Message is a Video Event");
-        //console.log("Data received in content script: ");
-        //console.log(message);
-        dispatchEvent("videoData", message.incomingVideoEvent)
+        console.log("ContentScript.js: Message is a Video Event")
+        dispatchEvent("videoData")
     }
 });
 
@@ -57,8 +55,8 @@ setTimeout(injectScript("script.js"), 100);
 
 
 // Util functions -------------------------- //
-var dispatchEvent = function(string, data) {
-    var event = new CustomEvent(string, {'detail': data});
+var dispatchEvent = function(string) {
+    var event = document.createEvent('Event');
     event.initEvent(string);
     document.dispatchEvent(event);
 };

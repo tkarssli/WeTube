@@ -93,7 +93,7 @@ public class ConnectionHandler {
                 }
             }
         } catch( NullPointerException e){
-            server.getClient(user1.getSessionId()).sendEvent("server", new Message("connectionResult", false, user1.getUserName(), "Unknown"));
+            server.getClient(user1.getSessionId()).sendEvent("server", new Message("connectionResult", false));
             System.out.println(user1.getUserName() + " failed to connect to unknown user " + request.target);
 
         }
@@ -113,7 +113,7 @@ public class ConnectionHandler {
         user2.setConnectedUser(-1);
 
         // Send broken connect messages back to client that is still connected
-        server.getClient(user2.getSessionId()).sendEvent("server", new Message("connectionResult", false, user2.getUserId(), user1.getUserId()));
+        server.getClient(user2.getSessionId()).sendEvent("server", new Message("connectionResult", false, user1.getUserId()));
 
 
         System.out.println(user1.getUserName() + " disconnected from " + user2.getUserName());
