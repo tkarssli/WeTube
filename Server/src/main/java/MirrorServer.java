@@ -18,26 +18,40 @@ import objects.UserObject;
 import objects.VideoEvent;
 
 import java.io.Console;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.util.Map;
 
 
 public class MirrorServer {
-    
-    private static final String SERVERADDRESS = "0.0.0.0";
+
+    private static String SERVERADDRESS = "";
     private static int PORT = 0;
 
     /**
      * Runs the server.
      */
     public static void main(String[] args) throws InterruptedException {
+        Socket s;
+        try{
+            s = new Socket("google.com", 80);
+            SERVERADDRESS = s.getLocalAddress().getHostAddress();
+        } catch(IOException e){
+            System.out.println("Local Ip couldn't be found, check connection");
+            System.exit(0);
+        }
+
+
+
 
         // Get Port environment variable for Heroku
         Map<String,String> env = System.getenv();
         try {
             PORT = Integer.parseInt(env.get("PORT"));
         } catch(NumberFormatException e){
-            System.out.println("Hosted locally, port set to 15591");
             PORT = 15591;
+            System.out.println("Hosted on " + SERVERADDRESS + ", port set to " + PORT);
         }
 
         // Server Config
@@ -138,6 +152,7 @@ class consoleIoThread extends Thread {
                     break;
                 case 1:
                     server.stop();
+                    System.exit(0);
                     break;
                 case 2:
                     server.stop();
