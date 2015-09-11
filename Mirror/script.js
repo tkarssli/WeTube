@@ -4,16 +4,19 @@ player = v.get(0);
 
 // Event Listeners -------------------------- //
 v.on('play',function(){
-    dispatchEvent("playEvent");
+    dispatchEvent();
 });
 v.on('pause', function(){
-    dispatchEvent("pauseEvent");
+    dispatchEvent();
 });
-v.on('seeking', function(){
-    dispatchEvent("seekingEvent");
-});
+
+// Todo need to change the way that seeking works
+//v.on('seeking', function(){
+//    dispatchEvent();
+//});
+
 v.on('seeked', function(){
-    dispatchEvent("seekedEvent");
+    dispatchEvent();
 });
 
 document.addEventListener("videoData", function(data){
@@ -28,7 +31,9 @@ document.addEventListener("videoData", function(data){
 });
 
 // Util functions -------------------------- //
-var dispatchEvent = function(string) {
+var dispatchEvent = function() {
+    // Load an event with all required video data then dispatch it to the content script
+    string = "userVideoEvent";
     var event = new CustomEvent(string, {'detail': {'currentTime': player.currentTime, 'duration': player.duration, 'paused': player.paused}});
     event.initEvent(string);
     document.dispatchEvent(event);

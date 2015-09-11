@@ -36,8 +36,8 @@ public class MirrorServer {
         try {
             PORT = Integer.parseInt(env.get("PORT"));
         } catch(NumberFormatException e){
-            System.out.println("Hosted locally, port set to 9090");
-            PORT = 9090;
+            System.out.println("Hosted locally, port set to 15591");
+            PORT = 15591;
         }
 
         // Server Config

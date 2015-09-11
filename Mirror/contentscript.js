@@ -14,11 +14,8 @@ chrome.runtime.sendMessage({createPA: "createPA"});
 //------------------------------------------/
 // Event listeners
 
-document.addEventListener("playEvent", function (data) {
-
-    //console.log("Content Script: " + data.detail.currentTime);
+document.addEventListener("userVideoEvent", function (data) {
     chrome.runtime.sendMessage( {videoEvent: data});
-    //console.log("Play Event");
 });
 
 document.addEventListener("pauseEvent", function (data) {

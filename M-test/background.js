@@ -1,7 +1,8 @@
-(function() {
+(function() { // Encapsulating function
 
 var HEROKU = 'http://peaceful-dawn-6588.herokuapp.com';
-var LOCAL = 'http://localhost:9090'
+var LOCAL = 'http://localhost:9090';
+var TSERVE = 'http://tserve.ddns.net:9090'	;
 
 var clientUserName = '';
 var clientUserId = 0;
