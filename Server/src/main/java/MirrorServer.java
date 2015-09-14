@@ -27,12 +27,14 @@ import java.util.Map;
 public class MirrorServer {
 
     private static String SERVERADDRESS = "";
-    private static int PORT = 0;
+    private static int PORT = 15591;
 
     /**
      * Runs the server.
      */
     public static void main(String[] args) throws InterruptedException {
+
+        // Get local IP, necessary evil because of dynamic local IP
         Socket s;
         try{
             s = new Socket("google.com", 80);
@@ -41,8 +43,6 @@ public class MirrorServer {
             System.out.println("Local Ip couldn't be found, check connection");
             System.exit(0);
         }
-
-
 
 
         // Get Port environment variable for Heroku
