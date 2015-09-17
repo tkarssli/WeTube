@@ -27,7 +27,7 @@ import java.util.Map;
 public class MirrorServer {
 
     private static String SERVERADDRESS = "";
-    private static int PORT = 15591;
+    private static int PORT = 80;
 
     /**
      * Runs the server.
@@ -47,12 +47,10 @@ public class MirrorServer {
 
         // Get Port environment variable for Heroku
         Map<String,String> env = System.getenv();
-        try {
-            PORT = Integer.parseInt(env.get("PORT"));
-        } catch(NumberFormatException e){
-            PORT = 15591;
-            System.out.println("Hosted on " + SERVERADDRESS + ", port set to " + PORT);
-        }
+
+
+        System.out.println("Hosted on " + SERVERADDRESS + ", port set to " + PORT);
+
 
         // Server Config
         Configuration config = new Configuration();
