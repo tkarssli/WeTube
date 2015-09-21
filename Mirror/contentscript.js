@@ -15,7 +15,8 @@ chrome.runtime.sendMessage({createPA: "createPA"});
 // Event listeners
 
 document.addEventListener("userVideoEvent", function (data) {
-    chrome.runtime.sendMessage( {videoEvent: data});
+    console.log(data.detail.currentTime);
+    chrome.runtime.sendMessage( {videoEvent: {currentTime: data.detail.currentTime, duration: data.detail.duration, paused: data.detail.paused}});
 });
 
 document.addEventListener("pauseEvent", function (data) {
@@ -57,6 +58,7 @@ setTimeout(injectScript("script.js"), 100);
 var dispatchEvent = function(string, data) {
     var event = new CustomEvent(string, {'detail': data});
     event.initEvent(string);
+    console.log(event);
     document.dispatchEvent(event);
 };
 
