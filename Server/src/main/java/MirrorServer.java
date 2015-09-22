@@ -34,6 +34,8 @@ public class MirrorServer {
      */
     public static void main(String[] args) throws InterruptedException {
 
+        final long lastEvent = System.nanoTime()/1000000;
+
         // Get local IP, necessary evil because of dynamic local IP
         Socket s;
         try{
@@ -87,7 +89,12 @@ public class MirrorServer {
             @Override
             public void onData(SocketIOClient socketIOClient, VideoEvent event, AckRequest ackRequest) throws Exception {
                 System.out.println("videoEvent Recevied");
-                eventRouter.route(event);
+                long newEvent = System.nanoTime()/1000000;
+                if((newEvent - lastEvent) < 100){
+                    // Do Nothing
+                } else {
+                    eventRouter.route(event);
+                }
             }
         });
 

@@ -2,7 +2,7 @@ v = $('video');
 player = v.get(0);
 
 // Util functions -------------------------- //
-var dispatchEvent = function() {
+var dispatchCustomEvent = function() {
     // Load an event with all required video data then dispatch it to the content script
     string = "userVideoEvent";
     console.log("videoEvent dispatched")
@@ -13,36 +13,48 @@ var dispatchEvent = function() {
 
 
 // Event Listeners -------------------------- //
-v.on('play', dispatchEvent());
-v.on('pause', dispatchEvent());
-
-// Todo need to change the way that seeking works
-//v.on('seeking', function(){
-//    dispatchEvent();
+$(player).on('play.mirror', function(){
+    console.log("Video Played");
+    dispatchCustomEvent()
+});
+$(player).on('pause.mirror', function(){
+    console.log("Video Paused");
+    dispatchCustomEvent()
+});
+//$(player).on('seeked.mirror', function(){
+//    console.log("Video Seeked");
+//    dispatchCustomEvent()
 //});
 
 
 
-v.on('seeked', dispatchEvent());
+
+
 
 document.addEventListener("videoData", function(data){
     //console.log(data.detail);
+    $(player).off('play.mirror pause.mirror');
 
     if( data.detail.paused == true && player.paused != true){
+
         player.currentTime = data.detail.currentTime;
-        $(player).off('pause');
         player.pause();
-        $(player).on('pause', dispatchEvent());
+
     } else if (data.detail.paused == false && player.paused != false){
         player.currentTime = data.detail.currentTime;
-        $(player).off('play');
         player.play();
-        $(player).on('play',dispatchEvent());
+
     } else {
         player.currentTime = data.detail.currentTime;
+
     }
 
 
+    $(player).on('play.mirror pause.mirror',function(){
+        dispatchCustomEvent();
+        console.log("Embedded listeners reinitialized")
+
+    });
     console.log("External video request received");
 });
 

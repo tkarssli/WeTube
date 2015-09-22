@@ -3,6 +3,7 @@ import handlers.UserHandler;
 import objects.Event;
 import objects.UserObject;
 
+
 /**
  * Created by Tamir on 8/11/2015.
  *
@@ -26,6 +27,8 @@ public class EventRouter {
         // String command = message.command;
 
         // Pass message from user1 to user2
+
+
         server.getClient(user2.getSessionId()).sendEvent("event", event);
 
         System.out.println("command sent from " + user1.getUserName() + " to " + user2.getUserName());

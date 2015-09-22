@@ -15,7 +15,7 @@ chrome.runtime.sendMessage({createPA: "createPA"});
 // Event listeners
 
 document.addEventListener("userVideoEvent", function (data) {
-    console.log(data.detail.currentTime);
+    //console.log(data.detail.currentTime);
     chrome.runtime.sendMessage( {videoEvent: {currentTime: data.detail.currentTime, duration: data.detail.duration, paused: data.detail.paused}});
 });
 
@@ -29,7 +29,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
         console.log("ContentScript.js: Message is a Video Event");
         //console.log("Data received in content script: ");
         //console.log(message);
-        dispatchEvent("videoData", message.incomingVideoEvent)
+        dispatchCustomEvent("videoData", message.incomingVideoEvent)
     }
 });
 
@@ -55,7 +55,7 @@ setTimeout(injectScript("script.js"), 100);
 
 
 // Util functions -------------------------- //
-var dispatchEvent = function(string, data) {
+var dispatchCustomEvent = function(string, data) {
     var event = new CustomEvent(string, {'detail': data});
     event.initEvent(string);
     console.log(event);
