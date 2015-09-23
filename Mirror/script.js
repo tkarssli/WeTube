@@ -17,10 +17,10 @@ $(player).on('play.mirror', function(){
     console.log("Video Played");
     dispatchCustomEvent()
 });
-$(player).on('pause.mirror', function(){
-    console.log("Video Paused");
-    dispatchCustomEvent()
-});
+//$(player).on('pause.mirror', function(){
+//    console.log("Video Paused");
+//    dispatchCustomEvent()
+//});
 //$(player).on('seeked.mirror', function(){
 //    console.log("Video Seeked");
 //    dispatchCustomEvent()
@@ -33,7 +33,7 @@ $(player).on('pause.mirror', function(){
 
 document.addEventListener("videoData", function(data){
     //console.log(data.detail);
-    $(player).off('play.mirror pause.mirror');
+    $(player).off('play.mirror');
 
     if( data.detail.paused == true && player.paused != true){
 
@@ -50,7 +50,7 @@ document.addEventListener("videoData", function(data){
     }
 
 
-    $(player).on('play.mirror pause.mirror',function(){
+    $(player).on('play.mirror',function(){
         dispatchCustomEvent();
         console.log("Embedded listeners reinitialized")
 
