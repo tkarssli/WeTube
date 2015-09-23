@@ -85,7 +85,14 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 
 				console.log("Connect request outbound : " + message.origin);
 				socket.emit("connectRequest", message);
+			} else if (message.disconnectRequest) {
+				var message = {
+					target: parseInt(message.connectRequest.userId),
+					origin: parseInt(clientUserId)
+				};
 
+				console.log("Disconnect Request");
+				socket.emit("disconnectRequest", message);
 
 			// videoEvent from contentScript
 			} else if (message.videoEvent){

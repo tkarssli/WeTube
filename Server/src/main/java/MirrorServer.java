@@ -61,10 +61,10 @@ public class MirrorServer {
         final SocketIOServer server = new SocketIOServer(config);
 
         // Start thread to allow for I/O in console if console exists
-        if (!(System.console() == null)) {
-            consoleIoThread ioThread = new consoleIoThread(server);
-            ioThread.start();
-        } else {System.out.println("No Console.");}
+//        if (!(System.console() == null)) {
+//            consoleIoThread ioThread = new consoleIoThread(server);
+//            ioThread.start();
+//        } else {System.out.println("No Console.");}
 
         // Handlers --------------------------------------------------------------------------------------------------------//
         final UserHandler userHandler = new UserHandler();
@@ -114,6 +114,16 @@ public class MirrorServer {
                 connectionHandler.formConnection(message);
             }
         });
+
+        // Receive disconnect request
+        server.addEventListener("disconnectRequest", Message.class, new DataListener<Message>() {
+            @Override
+            public void onData(SocketIOClient client, Message message, AckRequest ackRequest) throws Exception {
+                System.out.println("Disconnect request received from " + message.origin);
+                connectionHandler.breakConnection(message.origin);
+            }
+        });
+
         // Start Server -------------------------------------------------------------------------------------------------------//
 
         server.start();

@@ -30,18 +30,24 @@ window.onload = function() {
       // Determine what DOM element should be shown based on information returned from background.js
       if (userName == '' && userId == 0 && userKey == 0) {
         userNameForm.removeAttribute("hidden");
-      } else{
-        if(connectedUser == '') {
+      } else if(connectedUser == '') {
+          setTimeout(function() {
+                if (userId == 0) {
+                  chrome.runtime.sendMessage({getInfo: true});
+                  console.log("fired")}
+              }
+          ,200);
+          connectForm.removeAttribute("hidden");
           document.getElementById("userId1").innerHTML = String(userId);
           document.getElementById("userKey1").innerHTML = String(userKey);
-          connectForm.removeAttribute("hidden");
+
         } else{
           document.getElementById("userName").innerHTML = userName;
           document.getElementById("userId2").innerHTML = String(userId);
           document.getElementById("userKey2").innerHTML = String(userKey);
           document.getElementById("connectedUser").innerHTML = connectedUser;
           completedForm.removeAttribute("hidden");
-        }
+
       }
     } else if (message.connectionResult){
       connectedUser = message.connectionResult.user2;
@@ -76,6 +82,11 @@ window.onload = function() {
     location.reload();
 
   });
+
+  document.getElementById("disconnectButton").addEventListener("click", function(){
+    chrome.runtime.sendMessage({disconnectRequest: true})
+    location.reload();
+  })
 };
 
 
