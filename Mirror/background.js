@@ -87,7 +87,6 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 				socket.emit("connectRequest", message);
 			} else if (message.disconnectRequest) {
 				var message = {
-					target: parseInt(message.connectRequest.userId),
 					origin: parseInt(clientUserId)
 				};
 
