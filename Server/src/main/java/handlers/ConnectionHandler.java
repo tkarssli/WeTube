@@ -5,6 +5,7 @@ import com.corundumstudio.socketio.SocketIOServer;
 import objects.Message;
 import objects.UserObject;
 
+import java.io.IOException;
 import java.net.SocketAddress;
 import java.util.HashMap;
 import java.util.Map;
@@ -99,6 +100,7 @@ public class ConnectionHandler {
         }
     }
 
+    // Severs connection between two users
     public void breakConnection(int userId){
 
         UserObject user1 = userHandler.getUser(userId);
@@ -112,8 +114,15 @@ public class ConnectionHandler {
         user1.setConnectedUser(-1);
         user2.setConnectedUser(-1);
 
-        // Send broken connect messages back to client that is still connected
-        server.getClient(user2.getSessionId()).sendEvent("server", new Message("connectionResult", false, user1.getUserId()));
+        // Send broken connect messages back to clients
+
+        try {
+            server.getClient(user2.getSessionId()).sendEvent("server", new Message("connectionResult", false, user1.getUserId()));
+            server.getClient(user1.getSessionId()).sendEvent("server", new Message("connectionResult", false, user2.getUserId()));
+        } catch(NullPointerException e){
+            // Do nothing;
+        }
+
 
 
         System.out.println(user1.getUserName() + " disconnected from " + user2.getUserName());
@@ -134,6 +143,8 @@ public class ConnectionHandler {
         // Clean user out of maps
         userHandler.removeUser(userId);
         sessionIdMap.remove(address);
+
+
 
         System.out.println("User disconnected: " + user.getUserName() + " Key: " + user.getKey() + " userId: " + user.getUserId());
 

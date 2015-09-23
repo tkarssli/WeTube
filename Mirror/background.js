@@ -37,10 +37,11 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 
 			if (command == "connectionResult") {
 				if (bool == true) {
-					chrome.runtime.sendMessage({connectionResult: {result: true, user2: user2}});
 					connectedUser = user2;
+					chrome.runtime.sendMessage({connectionResult: {result: true, user2: user2}});
 					console.log("Succesfully connected to " + user2)
 				} else {
+					connectedUser = "";
 					chrome.runtime.sendMessage({connectionResult: {result: false, user2: user2}});
 					console.log("Failed connecting to " + user2)
 				}
@@ -92,7 +93,11 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 				console.log(message.videoEvent.currentTime);
 				eventHandler("videoEvent", message.videoEvent);
 
+
+				// Respond to request to get user info
 			} else if (message.getInfo){
+
+				// Send user info to popup.js
 				chrome.runtime.sendMessage({userInfo:{userId: clientUserId, key: clientKey, userName: clientUserName, connectedUser: connectedUser}})
 
 			}
