@@ -8,6 +8,7 @@ public class Message extends Event {
     public Boolean bool = false;
     public int target, key = -1;
     public int origin;
+    public double time = 0.0;
 
     public Message(){}
 
@@ -20,6 +21,9 @@ public class Message extends Event {
     public Message(int key, int target) {
         this.key = key;
         this.target = target;
+    }
+    public Message(double time){
+        this.time = time;
     }
 
     public Message(String string, boolean bool ){

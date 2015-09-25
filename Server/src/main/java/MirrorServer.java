@@ -124,6 +124,14 @@ public class MirrorServer {
             }
         });
 
+        server.addEventListener("ping", Message.class, new DataListener<Message>() {
+            @Override
+            public void onData(SocketIOClient client, Message message, AckRequest ackRequest) throws Exception {
+                server.getClient(client.getSessionId()).sendEvent("pong", message);
+
+            }
+        });
+
         // Start Server -------------------------------------------------------------------------------------------------------//
 
         server.start();

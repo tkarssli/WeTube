@@ -1,7 +1,7 @@
 (function() {
 
 var HEROKU = 'http://peaceful-dawn-6588.herokuapp.com';
-var LOCAL = 'http://localhost:9090';
+var LOCAL = 'http://192.168.1.181:80';
 var TSERVE = 'http://98.248.147.65:80';
 
 
@@ -12,6 +12,14 @@ var connectedUser = "";
 
 var socket;
 
+
+	// Latency test
+
+	setInterval(function(){
+		var message = {time: Date.now()}
+		//console.log(message);
+		socket.emit("ping", message)
+	}, 1000);
 
 
 // Connect to server after userName has been set
@@ -63,6 +71,14 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 			chrome.tabs.query({active: true, url: "*://www.youtube.com/*"}, function(tabs){
 				chrome.tabs.sendMessage(tabs[0].id, {incomingVideoEvent: data}, function(response) {});
 			});
+		});
+
+		socket.on("pong", function(data){
+			currTime= Date.now();
+
+			console.log("Latency: " + (currTime-data.time))
+
+
 		});
 
 	}
