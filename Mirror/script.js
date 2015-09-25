@@ -30,7 +30,7 @@ $(player).on('play.mirror', function(){
 
 document.addEventListener("videoData", function(data){
     //console.log(data.detail);
-    $(player).off('play.mirror');
+    //$(player).off('play.mirror');
 
     if( data.detail.paused == true && player.paused != true){
 
@@ -47,11 +47,11 @@ document.addEventListener("videoData", function(data){
     }
 
 
-    $(player).on('play.mirror',function(){
-        dispatchCustomEvent();
-        console.log("Embedded listeners reinitialized")
-
-    });
+    //$(player).on('play.mirror',function(){
+    //    dispatchCustomEvent();
+    //    console.log("Embedded listeners reinitialized")
+    //
+    //});
     console.log("External video request received");
 });
 

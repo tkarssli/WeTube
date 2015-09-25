@@ -58,7 +58,7 @@ setTimeout(injectScript("script.js"), 100);
 var dispatchCustomEvent = function(string, data) {
     var event = new CustomEvent(string, {'detail': data});
     event.initEvent(string);
-    console.log(event);
+    //console.log(event);
     document.dispatchEvent(event);
 };
 
