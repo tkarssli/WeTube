@@ -28,9 +28,6 @@ $(player).on('play.mirror', function(){
 
 
 
-
-
-
 document.addEventListener("videoData", function(data){
     //console.log(data.detail);
     $(player).off('play.mirror');

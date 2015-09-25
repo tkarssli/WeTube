@@ -1,18 +1,30 @@
 <!doctype html>
 <head>
     <script src="popup.js"></script>
+    <link rel="stylesheet" type="text/css" href="popup.css">
 </head>
 <html>
-<span id="userNameForm" hidden="hidden">
-        Enter your user name: <input type="text" id="userNameField"><br>
-        <input type="submit" id="userNameButton" value="Submit">
+<body class="popupstyle">
+    <h1>Mirror</h1>
+    <span id="userNameForm" hidden="hidden">
+        <label>
+            <span>Enter a User Name:</span>
+            <input type="text" id="userNameField">
+            <input type="submit" id="userNameButton" value="Submit">
+        </label>
     </span>
     <span id="connectForm" hidden="hidden">
-        Your user ID: <span id="userId1"></span><br>
-        Your Key: <span id="userKey1"></span><br>
-        User ID: <input type="text" name="userIdField" id="userIdField"><br>
-        key: <input type="text" name="keyField" id="keyField"><br>
-        <input type="submit" id="connectButton" value="Submit">
+        <h2>
+            <span>Your user ID: </span><span id="userId1"></span><br>
+            <span>Your Key: </span><span id="userKey1"></span><br>
+        </h2>
+        <label for="userIdField">
+            <span>User Name:</span>
+            <input type="text" name="userIdField" id="userIdField"><br>
+            <span>Key:</span>
+            <input type="text" name="keyField" id="keyField"><br>
+            <input type="submit" id="connectButton" value="Submit">
+        </label>
     </span>
     <span id="completedForm" hidden="hidden">
             User Name: <span id="userName"></span> <br>
@@ -22,4 +34,5 @@
             <input type="submit" id="disconnectButton" value="Disconnect">
 
     </span>
+</body>
 </html>
