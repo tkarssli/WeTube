@@ -96,7 +96,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 			// videoEvent from contentScript
 			} else if (message.videoEvent){
 				console.log("Video event sending to handler");
-				console.log(message.videoEvent.currentTime);
+				//console.log(message.videoEvent.currentTime);
 				eventHandler("videoEvent", message.videoEvent);
 
 
@@ -124,12 +124,12 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 	var eventHandler = function(eventType, videoEvent){
 		var events = ["videoEvent"];
 
-		console.log("videoEvent");
-		console.log(videoEvent);
+		//console.log("videoEvent");
+		//console.log(videoEvent);
 		if(eventType == events[0]){
 			details = videoEvent;
-			console.log("details:")
-			console.log(details);
+			//console.log("details:")
+			//console.log(details);
 			var message =
 			{command: events[0],
 				origin: parseInt(clientUserId),
