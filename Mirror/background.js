@@ -79,14 +79,15 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 		});
 
 		socket.on("pong", function(data){
-			var l = Date.now() - data.time;
+			var lat = Date.now() - data.time;
 			if(latency.length >= 10){
 				latency.shift();
-				latency.push(l);
+				latency.push(lat);
 			} else {
-				latency.push(l);
+				latency.push(lat);
 			}
 			//console.log("Latency: " + (currTime-data.time))
+			parseInt
 
 
 		});
@@ -188,7 +189,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 		var total = 0;
 
 		for(var t in latency){
-			total += t;
+			total += parseInt(t);
 		}
 		return total/length;
 
