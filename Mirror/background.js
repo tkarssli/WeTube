@@ -9,18 +9,17 @@ var clientUserName = '';
 var clientUserId = 0;
 var clientKey = 0;
 var connectedUser = "";
-
+var latency =[];
 var socket;
 
 
-	// Latency test
+
 
 	setInterval(function(){
 		var message = {time: Date.now()}
-		//console.log(message);
+		console.log(message);
 		socket.emit("ping", message)
 	}, 1000);
-
 
 // Connect to server after userName has been set
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
@@ -28,6 +27,9 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 		clientUserName = message.userNameSet;
 
 		socket = io.connect(TSERVE);
+
+		// Latency test
+
 
 		// Socket Listeners
 		socket.on('connect', function () {
@@ -69,14 +71,22 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 
 			console.log("Background.js: message received")
 			chrome.tabs.query({active: true, url: "*://www.youtube.com/*"}, function(tabs){
+				data.backTime = Date.now();
+				data.avgLat += averageLatency();
 				chrome.tabs.sendMessage(tabs[0].id, {incomingVideoEvent: data}, function(response) {});
+				console.log(Date.now());
 			});
 		});
 
 		socket.on("pong", function(data){
-			currTime= Date.now();
-
-			console.log("Latency: " + (currTime-data.time))
+			var l = Date.now() - data.time;
+			if(latency.length >= 10){
+				latency.shift();
+				latency.push(l);
+			} else {
+				latency.push(l);
+			}
+			//console.log("Latency: " + (currTime-data.time))
 
 
 		});
@@ -151,8 +161,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 				origin: parseInt(clientUserId),
 				currentTime: details.currentTime,
 				duration: details.duration,
-				paused: details.paused
-
+				paused: details.paused,
+				avgLat: averageLatency()
 			};
 
 
@@ -171,6 +181,18 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 			console.log("Emitting event to server");
 			socket.emit("videoEvent", event);
 		}
+	};
+
+	var averageLatency = function(){
+		var length = latency.length;
+		var total = 0;
+
+		for(var t in latency){
+			total += t;
+		}
+		return total/length;
+
+
 	}
 
 // Terminating brackets for encapsulating function

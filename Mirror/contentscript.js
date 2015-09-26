@@ -27,9 +27,10 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
     console.log("ContentScript.js: A Message has been received");
     if (message.incomingVideoEvent){
         console.log("ContentScript.js: Message is a Video Event");
+        console.log(Date.now());
         //console.log("Data received in content script: ");
         //console.log(message);
-        dispatchCustomEvent("videoData", message.incomingVideoEvent)
+        dispatchCustomEvent("videoData", message.incomingVideoEvent);
     }
 });
 

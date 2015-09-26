@@ -32,6 +32,9 @@ document.addEventListener("videoData", function(data){
     //console.log(data.detail);
     //$(player).off('play.mirror');
 
+    var extTime = Date.now()-data.detail.backTime;
+    data.detail.currentTime = data.currentTime + extTime + data.detail.avgLat;
+
     if( data.detail.paused == true && player.paused != true){
 
         player.currentTime = data.detail.currentTime;
@@ -53,5 +56,6 @@ document.addEventListener("videoData", function(data){
     //
     //});
     console.log("External video request received");
+    console.log(extTime + data.detail.avgLat);
 });
 
