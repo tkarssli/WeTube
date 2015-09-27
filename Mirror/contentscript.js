@@ -6,7 +6,6 @@ player = v.get(0);
 
 // Video Event Listeners -------------------------- //
 $(player).on('play.mirror', function(){
-    console.log("Video Played");
     chrome.runtime.sendMessage({videoEvent: {'currentTime': player.currentTime, 'duration': player.duration, 'paused': player.paused}});
 });
 
