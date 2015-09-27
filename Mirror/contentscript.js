@@ -23,7 +23,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
     if (message.incomingVideoEvent) {
         console.log("ContentScript.js: Message is a Video Event");
         var extTime = Date.now() - message.incomingVideoEvent.backTime;
-        message.incomingVideoEvent.currentTime = message.incomingVideoEvent.currentTime + extTime * .001 + message.incomingVideoEvent.avgLat * .001 + .300;
+        //message.incomingVideoEvent.currentTime = message.incomingVideoEvent.currentTime + extTime * .001 + message.incomingVideoEvent.avgLat * .001 + .300;
+        message.incomingVideoEvent.currentTime = message.incomingVideoEvent.currentTime + extTime * .001 + message.incomingVideoEvent.avgLat * .001;
 
         if (message.incomingVideoEvent.paused == true && player.paused != true) {
             player.currentTime = message.incomingVideoEvent.currentTime;
