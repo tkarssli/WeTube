@@ -17,7 +17,6 @@ var socket;
 
 	setInterval(function(){
 		var message = {time: Date.now()}
-		console.log(message);
 		socket.emit("ping", message)
 	}, 1000);
 
@@ -41,7 +40,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 
 		socket.on('server', function (data) {
 			var command = data.command;
-			var user1 = data.user1;
+			//var user1 = data.user1;
 			var user2 = data.user2;
 			var bool = data.bool;
 
@@ -60,8 +59,6 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 				clientUserId = data.userId;
 				clientKey = data.key;
 
-				//chrome.runtime.sendMessage({userInfo: {userId: clientUserId, key: data.key}});
-
 			}
 
 		});
@@ -73,7 +70,6 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 				data.backTime = Date.now();
 				data.avgLat += averageLatency();
 				chrome.tabs.sendMessage(tabs[0].id, {incomingVideoEvent: data}, function(response) {});
-				console.log(Date.now());
 			});
 		});
 
@@ -85,10 +81,6 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 			} else {
 				latency.push(lat);
 			}
-			//console.log("Latency: " + (currTime-data.time))
-			parseInt
-
-
 		});
 
 	}
@@ -172,9 +164,9 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 
 	//------------------------------------------/
 	// Utility Functions
-	var emitMessage = function(message){
-		socket.emit("message", message)
-	};
+	//var emitMessage = function(message){
+	//	socket.emit("message", message)
+	//};
 
 	var emitEvent = function (event){
 		if (connectedUser != ""){
