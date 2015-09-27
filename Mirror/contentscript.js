@@ -1,5 +1,12 @@
 console.log("Initializing Mirror");
+v = $('video');
+player = v.get(0);
 
+// Video Event Listeners -------------------------- //
+$(player).on('play.mirror', function(){
+    console.log("Video Played");
+    dispatchCustomEvent()
+});
 
 //------------------------------------------/
 // Event Dispatchers
@@ -7,61 +14,45 @@ console.log("Initializing Mirror");
 // create pageAction
 chrome.runtime.sendMessage({createPA: "createPA"});
 
-//document.onkeydown = function() {
-//    chrome.runtime.sendMessage({keyEvent: event.keyCode})
-//};
+var dispatchCustomEvent = function(string, data) {
+    // Load an event with all required video data then dispatch it to the content script
+    string = "userVideoEvent";
+    console.log("videoEvent dispatched");
+    var event = new CustomEvent(string,{'detail': {'currentTime': player.currentTime, 'duration': player.duration, 'paused': player.paused}});
+    event.initEvent(string);
+    document.dispatchEvent(event);
+};
+
 
 //------------------------------------------/
 // Event listeners
 
-document.addEventListener("userVideoEvent", function (data) {
-    //console.log(data.detail.currentTime);
-    chrome.runtime.sendMessage( {videoEvent: {currentTime: data.detail.currentTime, duration: data.detail.duration, paused: data.detail.paused}});
-});
-
-document.addEventListener("pauseEvent", function (data) {
-    console.log("Pause Event");
-});
-
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
     console.log("ContentScript.js: A Message has been received");
-    if (message.incomingVideoEvent){
+    if (message.incomingVideoEvent) {
         console.log("ContentScript.js: Message is a Video Event");
-        console.log(Date.now());
-        //console.log("Data received in content script: ");
-        //console.log(message);
-        dispatchCustomEvent("videoData", message.incomingVideoEvent);
+        var extTime = Date.now() - message.incomingVideoEvent.backTime;
+        message.incomingVideoEvent.currentTime = message.incomingVideoEvent.currentTime + extTime * .001 + message.incomingVideoEvent.avgLat * .001 + .300;
+
+        if (message.incomingVideoEvent.paused == true && player.paused != true) {
+            player.currentTime = message.incomingVideoEvent.currentTime;
+            player.pause();
+
+        } else if (message.incomingVideoEvent.paused == false && player.paused != false) {
+            player.currentTime = message.incomingVideoEvent.currentTime;
+            player.play();
+            console.log(Date.now());
+
+        } else {
+            player.currentTime = message.incomingVideoEvent.currentTime;
+            console.log(Date.now());
+        }
     }
 });
 
 
-//------------------------------------------/
-// Inject Javascript to current page
-
-function injectScript(script){
-
-    // Create script on current page, async is false because
-    // the jquery should load before the injected script.
-    var s = document.createElement('script');
-    s.async= false;
-    s.src = chrome.extension.getURL(script);
-    s.onload = function() {
-        this.parentNode.removeChild(this);
-    };
-    (document.head||document.documentElement).appendChild(s);
-}
-
-injectScript("jquery.min.js");
-setTimeout(injectScript("script.js"), 100);
 
 
-// Util functions -------------------------- //
-var dispatchCustomEvent = function(string, data) {
-    var event = new CustomEvent(string, {'detail': data});
-    event.initEvent(string);
-    //console.log(event);
-    document.dispatchEvent(event);
-};
 
 
 

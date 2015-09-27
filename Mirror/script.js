@@ -33,19 +33,26 @@ document.addEventListener("videoData", function(data){
     //$(player).off('play.mirror');
 
     var extTime = Date.now()-data.detail.backTime;
-    data.detail.currentTime = data.currentTime + extTime + data.detail.avgLat;
+    data.detail.currentTime = data.detail.currentTime + extTime*.001 + data.detail.avgLat*.001 + .300;
 
     if( data.detail.paused == true && player.paused != true){
 
         player.currentTime = data.detail.currentTime;
+
         player.pause();
+        //console.log(Date.now());
+
 
     } else if (data.detail.paused == false && player.paused != false){
         player.currentTime = data.detail.currentTime;
         player.play();
+        console.log(Date.now());
+
 
     } else {
         player.currentTime = data.detail.currentTime;
+        console.log(Date.now());
+
 
     }
 
@@ -56,6 +63,6 @@ document.addEventListener("videoData", function(data){
     //
     //});
     console.log("External video request received");
-    console.log(extTime + data.detail.avgLat);
+    //console.log(extTime + data.detail.avgLat);
 });
 
