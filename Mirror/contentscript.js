@@ -16,16 +16,6 @@ $(player).on('play.mirror', function(){
 // create pageAction
 chrome.runtime.sendMessage({createPA: "createPA"});
 
-var dispatchCustomEvent = function(string, data) {
-    // Load an event with all required video data then dispatch it to the content script
-    string = "userVideoEvent";
-    console.log("videoEvent dispatched");
-    var event = new CustomEvent(string,{'detail': {'currentTime': player.currentTime, 'duration': player.duration, 'paused': player.paused}});
-    event.initEvent(string);
-    document.dispatchEvent(event);
-};
-
-
 //------------------------------------------/
 // Event listeners
 
