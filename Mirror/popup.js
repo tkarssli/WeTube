@@ -38,13 +38,14 @@ window.onload = function() {
               }
           ,200);
           connectForm.removeAttribute("hidden");
-          document.getElementById("userId1").innerHTML = String(userId);
-          document.getElementById("userKey1").innerHTML = String(userKey);
+          document.getElementsByClassName("userName")[0].innerHTML = userName;
+          document.getElementsByClassName("userId")[0].innerHTML = String(userId);
+          document.getElementsByClassName("userKey")[0].innerHTML = String(userKey);
 
         } else{
-          document.getElementById("userName").innerHTML = userName;
-          document.getElementById("userId2").innerHTML = String(userId);
-          document.getElementById("userKey2").innerHTML = String(userKey);
+          document.getElementsByClassName("userName")[1].innerHTML = userName;
+          document.getElementsByClassName("userId")[1].innerHTML = String(userId);
+          document.getElementsByClassName("userKey")[1].innerHTML = String(userKey);
           document.getElementById("connectedUser").innerHTML = connectedUser;
           completedForm.removeAttribute("hidden");
 

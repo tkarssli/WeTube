@@ -1,7 +1,7 @@
 .popupstyle {
     margin-left:auto;
     margin-right:auto ;
-    min-width: 250px;
+    min-width: 300px;
     text-align: center;
     background: #F7F7F7;
     padding: 10px 15px 5px 10px;
@@ -20,19 +20,11 @@
 }
 .popupstyle h2{
     font-size: 18px;
-    /*padding: 0px 0px 10px 0px;*/
+    padding: 0px 0px 10px 0px;
     display: block;
     border-bottom: 1px solid #E4E4E4;
     /*margin: 0px -15px 0px -10px;*/
     color: #596488;
-}
-.popupstyle h2>span{
-    /*font-size: 25px;*/
-    /*padding: 0px 0px 10px 0px;*/
-    /*display: block;*/
-    /*border-bottom: 1px solid #E4E4E4;*/
-    /*margin: 0px -15px 0px -10px;*/
-    /*color: #888;*/
 }
 
 .popupstyle label {
@@ -42,13 +34,20 @@
     font-size: 14px;
 }
 .popupstyle label>span {
+    display: inline-block;
+    float:left;
+    clear: left;
+    text-align: right;
     width: 20%;
     padding-right: 10px;
     margin-top: 10px;
     color: #888;
+    /*align-content: left;*/
 }
 
 .popupstyle input[type="text"] {
+    display: inline-block;
+    float: left
     border: 1px solid #DADADA;
     color: #888;
     height: 30px;
@@ -57,7 +56,7 @@
     margin-top: 2px;
     outline: 0 none;
     padding: 3px 3px 3px 5px;
-    width: 70%;
+    width: 50%;
     font-size: 12px;
     line-height:15px;
     box-shadow: inset 0px 1px 4px #ECECEC;
