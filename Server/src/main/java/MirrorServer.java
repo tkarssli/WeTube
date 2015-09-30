@@ -12,19 +12,17 @@ import com.corundumstudio.socketio.listener.DataListener;
 import com.corundumstudio.socketio.listener.DisconnectListener;
 import handlers.ConnectionHandler;
 import handlers.UserHandler;
-import objects.Event;
 import objects.Message;
 import objects.UserObject;
 import objects.VideoEvent;
 
 import java.io.Console;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Map;
 
 
-public class MirrorServer {
+public class    MirrorServer {
 
     private static String SERVERADDRESS = "";
     private static int PORT = 80;
@@ -33,8 +31,6 @@ public class MirrorServer {
      * Runs the server.
      */
     public static void main(String[] args) throws InterruptedException {
-
-        final long lastEvent = System.nanoTime()/1000000;
 
         // Get local IP, necessary evil because of dynamic local IP
         Socket s;
@@ -88,13 +84,7 @@ public class MirrorServer {
         server.addEventListener("videoEvent", VideoEvent.class, new DataListener<VideoEvent>() {
             @Override
             public void onData(SocketIOClient socketIOClient, VideoEvent event, AckRequest ackRequest) throws Exception {
-                System.out.println("videoEvent Recevied");
-                long newEvent = System.nanoTime()/1000000;
-                if((newEvent - lastEvent) < 100){
-                    // Do Nothing
-                } else {
-                    eventRouter.route(event);
-                }
+                eventRouter.routeVideoEvent(event);
             }
         });
 
@@ -123,6 +113,14 @@ public class MirrorServer {
                 connectionHandler.breakConnection(message.origin);
             }
         });
+
+        // Generic Message request
+        server.addEventListener("message", Message.class, new DataListener<Message>() {
+            @Override
+            public void onData(SocketIOClient socketIOClient, Message message, AckRequest ackRequest) throws Exception {
+                eventRouter.routeEvent(message);
+            }
+    });
 
         server.addEventListener("ping", Message.class, new DataListener<Message>() {
             @Override

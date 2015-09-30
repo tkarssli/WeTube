@@ -1,16 +1,20 @@
 (function() {
 
-	var HEROKU = 'http://peaceful-dawn-6588.herokuapp.com';
-	var LOCAL = 'http://192.168.1.181:80';
-	var TSERVE = 'http://98.248.147.65:80';
+	//var HEROKU = 'http://peaceful-dawn-6588.herokuapp.com'; // No longer any plans to use Heroku
+	var LOCAL = 'http://localhost:80';
+	var TSERVE = 'http://tserve.noip.me:80';
 
 
+	// Client sided user information
 	var clientUserName = '';
 	var clientUserId = 0;
 	var clientKey = 0;
+	// Currently connected user
 	var connectedUser = "";
+	// For calculating the average latency
 	var latency =[];
 	var socket;
+	// Tab extension send commands to the activeTab
 	var activeTab;
 
 
@@ -24,7 +28,7 @@
 		} catch(TypeError){
 
 		}
-	}, 1000);
+	}, 30000);
 
 	// Connect to server after userName has been set
 	chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
@@ -64,7 +68,6 @@
 					clientUserName = data.userName;
 					clientUserId = data.userId;
 					clientKey = data.key;
-
 				}
 
 			});
@@ -76,6 +79,12 @@
 				data.avgLat += averageLatency();
 				chrome.tabs.sendMessage(activeTab, {incomingVideoEvent: data}, function(response) {});
 			});
+
+			socket.on("message", function(data){
+				console.log("URL change");
+				chrome.tabs.update(activeTab,{url: data.URL, highlighted: true})
+			});
+
 
 			socket.on("pong", function(data){
 				var lat = Date.now() - data.time;
@@ -113,6 +122,8 @@
 
 			console.log("Connect request outbound : " + message.origin);
 			socket.emit("connectRequest", message);
+
+		// Disconnect request from popup
 		} else if (message.disconnectRequest) {
 			var message = {
 				origin: parseInt(clientUserId)
@@ -121,18 +132,24 @@
 			console.log("Disconnect Request");
 			socket.emit("disconnectRequest", message);
 
+		// URL change request from popup
+		} else if (message.urlRequest) {
+			var message = {
+				URL: message.urlRequest
+			};
+
+			console.log("URL Request to :" + message.urlRequest);
+			socket.emit("message", message);
+
 		// videoEvent from contentScript
 		} else if (message.videoEvent && tabId == activeTab){
 			console.log("Video event sending to handler");
 			eventHandler("videoEvent", message.videoEvent);
 
-
-			// Respond to request to get user info
+		// Get user info request from popup
 		} else if (message.getInfo){
-
 			// Send user info to popup.js
 			chrome.runtime.sendMessage({userInfo:{userId: clientUserId, key: clientKey, userName: clientUserName, connectedUser: connectedUser}})
-
 		}
 	});
 

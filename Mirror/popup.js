@@ -44,7 +44,7 @@ window.onload = function() {
 
         } else{
           document.getElementsByClassName("userName")[1].innerHTML = userName;
-          document.getElementsByClassName("userId")[1].innerHTML = String(userId);
+          document.getElementsByClassName("userId ")[1].innerHTML = String(userId);
           document.getElementsByClassName("userKey")[1].innerHTML = String(userKey);
           document.getElementById("connectedUser").innerHTML = connectedUser;
           completedForm.removeAttribute("hidden");
@@ -78,15 +78,19 @@ window.onload = function() {
 
     chrome.runtime.sendMessage({
       connectRequest: {userId: userId, key: key}
-    })
+    });
 
     location.reload();
-
   });
 
   document.getElementById("disconnectButton").addEventListener("click", function(){
-    chrome.runtime.sendMessage({disconnectRequest: true})
+    chrome.runtime.sendMessage({disconnectRequest: true});
     location.reload();
+  });
+
+  document.getElementById("urlButton").addEventListener("click", function(){
+    var url = document.getElementById("urlField");
+    chrome.runtime.sendMessage({urlRequest: url});
   })
 };
 

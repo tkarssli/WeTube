@@ -9,6 +9,7 @@ public class Message extends Event {
     public int target, key = -1;
     public int origin;
     public double time = 0.0;
+    public String URL = "";
 
     public Message(){}
 

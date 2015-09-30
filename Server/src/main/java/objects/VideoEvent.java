@@ -8,4 +8,5 @@ public class VideoEvent extends Event {
     public double duration = 0;
     public boolean paused = false;
     public double avgLat = 0;
+
 }
