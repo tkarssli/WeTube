@@ -4,7 +4,7 @@
 	var LOCAL = 'http://localhost:80';
 	var TSERVE = 'http://tserve.noip.me:80';
 
-
+	var socket;
 	// Client sided user information
 	var clientUserName = '';
 	var clientUserId = 0;
@@ -13,14 +13,10 @@
 	var connectedUser = "";
 	// For calculating the average latency
 	var latency =[];
-	var socket;
 	// Tab extension send commands to the activeTab
 	var activeTab;
 
-
-
-
-
+	// Start ping loop
 	setInterval(function(){
 		var message = {time: Date.now()};
 		try {
@@ -69,7 +65,6 @@
 					clientUserId = data.userId;
 					clientKey = data.key;
 				}
-
 			});
 
 			socket.on("event", function (data) {
@@ -95,7 +90,6 @@
 					latency.push(lat);
 				}
 			});
-
 		}
 	});
 
@@ -134,12 +128,14 @@
 
 		// URL change request from popup
 		} else if (message.urlRequest) {
-			var message = {
+			var msg = {
+				origin: parseInt(clientUserId),
 				URL: message.urlRequest
+
 			};
 
-			console.log("URL Request to :" + message.urlRequest);
-			socket.emit("message", message);
+			console.log("URL Request to: " + message.urlRequest);
+			socket.emit("message", msg);
 
 		// videoEvent from contentScript
 		} else if (message.videoEvent && tabId == activeTab){
@@ -169,12 +165,8 @@
 	var eventHandler = function(eventType, videoEvent){
 		var events = ["videoEvent"];
 
-		//console.log("videoEvent");
-		//console.log(videoEvent);
 		if(eventType == events[0]){
 			details = videoEvent;
-			//console.log("details:")
-			//console.log(details);
 			var message =
 			{command: events[0],
 				origin: parseInt(clientUserId),
@@ -183,8 +175,6 @@
 				paused: details.paused,
 				avgLat: averageLatency()
 			};
-
-
 			emitEvent(message);
 		}
 	};

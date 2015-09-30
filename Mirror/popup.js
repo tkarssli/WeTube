@@ -89,7 +89,8 @@ window.onload = function() {
   });
 
   document.getElementById("urlButton").addEventListener("click", function(){
-    var url = document.getElementById("urlField");
+    var url = document.getElementById("urlField").value;
+    console.log(url);
     chrome.runtime.sendMessage({urlRequest: url});
   })
 };

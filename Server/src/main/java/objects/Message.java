@@ -7,7 +7,6 @@ public class Message extends Event {
     public String command,user1,user2 = "";
     public Boolean bool = false;
     public int target, key = -1;
-    public int origin;
     public double time = 0.0;
     public String URL = "";
 
