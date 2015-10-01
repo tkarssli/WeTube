@@ -1,2 +1,2 @@
 # MirrorExtension
-A google extension for synchronous webpage interaction between two or more users.
+A google extension for synchronous YouTube viewing between two or more users.
