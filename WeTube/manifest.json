@@ -1,8 +1,8 @@
 {
-  "name": "Mirror",
+  "name": "WeTube",
   "version": "0.1.5",
   "manifest_version": 2,
-  "description": "Share your youtube player for simultaneous viewing",
+  "description": "Watch YouTube with friends.",
   "permissions": [
     "tabs",
     "contextMenus",
@@ -21,7 +21,7 @@
   "page_action" :
   {
     "default_icon": "icon-large.png",
-    "default_title" : "Mirror - Connect or Disconnect from user",
+    "default_title" : "WeTube",
     "default_popup" : "popup.html"
   },
   "content_scripts": [{
@@ -33,10 +33,10 @@
   "input_components":
     [
       {
-        "name": "Mirror",
+        "name": "WeTube",
         "type": "",
-        "id": "mirror",
-        "description": "Shared youtube interaction for simultaneous viewing",
+        "id": "wetube",
+        "description": "Watch YouTube with friends.",
         "language": "en-US",
         "layouts": [
           "us::eng"

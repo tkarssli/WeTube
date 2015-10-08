@@ -22,7 +22,7 @@ import java.net.Socket;
 import java.util.Map;
 
 
-public class    MirrorServer {
+public class ExtensionServer {
 
     private static String SERVERADDRESS = "";
     private static int PORT = 80;
