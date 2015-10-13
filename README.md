@@ -11,7 +11,7 @@ Any advice on how I could expand/fix/improve it or people wanting to contribute 
 Open a YouTube tab and you will find a WeTube Icon in your search bar. Click the icon and enter a username. You will then need to enter a user ID and Key of the target computer. If you have multiple YouTube tabs open right click anywhere on the one you want to share and use the WeTube context menu to share that tab.
 
 ##### Planned Features: 
-- [x] Send URL to connected clients
+- [x] Send URL to connected client~~s~~
 - [ ] Connect to multiple users
 - [ ] Allow user to choose what parts of video should be shared (Audio, playspeed, videosize)
 - [ ] Share entire YouTube page
