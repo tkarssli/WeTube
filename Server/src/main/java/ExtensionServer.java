@@ -1,7 +1,7 @@
 /**
  * Created by Tamir on 7/23/2015.
  *
- * Mirror Server
+ * WeTube Extension Server, Hosted on Amazon EC2
  */
 
 import com.corundumstudio.socketio.AckRequest;
@@ -32,7 +32,7 @@ public class ExtensionServer {
      */
     public static void main(String[] args) throws InterruptedException {
 
-        // Get local IP, necessary evil because of dynamic local IP
+        // Get local IP
         Socket s;
         try{
             s = new Socket("google.com", 80);
@@ -41,10 +41,6 @@ public class ExtensionServer {
             System.out.println("Local Ip couldn't be found, check connection");
             System.exit(0);
         }
-
-
-        // Get Port environment variable for Heroku
-        Map<String,String> env = System.getenv();
 
 
         System.out.println("Hosted on " + SERVERADDRESS + ", port set to " + PORT);
@@ -56,11 +52,6 @@ public class ExtensionServer {
         config.setPort(PORT);
         final SocketIOServer server = new SocketIOServer(config);
 
-        // Start thread to allow for I/O in console if console exists
-//        if (!(System.console() == null)) {
-//            consoleIoThread ioThread = new consoleIoThread(server);
-//            ioThread.start();
-//        } else {System.out.println("No Console.");}
 
         // Handlers --------------------------------------------------------------------------------------------------------//
         final UserHandler userHandler = new UserHandler();
@@ -137,53 +128,6 @@ public class ExtensionServer {
         Thread.sleep(Integer.MAX_VALUE);
 
         server.stop();
-
-    }
-}
-
-// In the case that this is run from a console, simple commands for managing the server
-class consoleIoThread extends Thread {
-    private Console c;
-    private SocketIOServer server;
-    consoleIoThread(SocketIOServer server){
-        this.c = System.console();
-        this.server = server;
-    }
-
-    public void run() {
-        String[] commands = new String[] {"start", "stop", "restart","echo"};
-
-
-        while (true){
-            String input = c.readLine();
-            int index = -1;
-            for(int i=0; i < commands.length;i++){
-                if(input == commands[i]){
-                    index = i;
-                    break;
-                } else if ( i == commands.length -1){
-                    System.out.println("Enter a valid command;");
-                    for ( String s : commands){System.out.println(s);}
-                }
-
-            }
-            switch (index){
-                case 0:
-                    server.start();
-                    break;
-                case 1:
-                    server.stop();
-                    System.exit(0);
-                    break;
-                case 2:
-                    server.stop();
-                    server.start();
-                    break;
-                case 3:
-                    System.out.println("Echoooooo");
-            }
-
-        }
 
     }
 }
