@@ -25,7 +25,7 @@ import java.util.Map;
 public class ExtensionServer {
 
     private static String SERVERADDRESS = "";
-    private static int PORT = 80;
+    private static int PORT = 3000;
 
     /**
      * Runs the server.

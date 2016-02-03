@@ -1,9 +1,9 @@
 (function() {
 
 	//var HEROKU = 'http://peaceful-dawn-6588.herokuapp.com'; // No longer any plans to use Heroku
-	var LOCAL = 'http://localhost:80';
+	var LOCAL = 'http://192.168.1.141:3000';
 	var TSERVE = 'http://tserve.noip.me:80';
-	var AMAZON = 'http://ec2-52-26-131-63.us-west-2.compute.amazonaws.com:80'
+	var AMAZON = '52.34.170.53:80'
 
 	var socket;
 	// Client sided user information
@@ -32,7 +32,7 @@
 		if (message.userNameSet){
 			clientUserName = message.userNameSet;
 
-			socket = io.connect(AMAZON);
+			socket = io.connect(LOCAL);
 
 			// Latency test
 
