@@ -1,12 +1,35 @@
 console.log("Initializing WeTube");
 
+LASTCOMMAND = 0;
+
 // Youtube video element
 v = $('video');
 player = v.get(0);
 
 // Video Event Listeners -------------------------- //
 $(player).on('play', function(){
-    chrome.runtime.sendMessage({videoEvent: {'currentTime': player.currentTime, 'duration': player.duration, 'paused': player.paused}});
+    console.log("play click");
+
+    chrome.runtime.sendMessage({
+        videoEvent: {
+            'currentTime': player.currentTime,
+            'duration': player.duration,
+            'paused': player.paused
+        }
+    });
+});
+
+$(player).on('pause', function(){
+    console.log("pause click");
+
+    chrome.runtime.sendMessage({
+        videoEvent: {
+            'currentTime': player.currentTime,
+            'duration': player.duration,
+            'paused': player.paused
+        }
+    });
+
 });
 
 //------------------------------------------/
@@ -41,6 +64,11 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
         }
     }
 });
+
+var lastCommand = function(){
+    return Date.now() - LASTCOMMAND > 1000;
+
+};
 
 
 

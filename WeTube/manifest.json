@@ -1,6 +1,6 @@
 {
   "name": "WeTube",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "manifest_version": 2,
   "description": "Watch YouTube with friends.",
   "permissions": [
@@ -30,6 +30,7 @@
       "https://www.youtube.com/*"],
     "js": ["jquery.min.js","contentscript.js"]
   }],
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "input_components":
     [
       {

@@ -1,9 +1,9 @@
 (function() {
 
 	//var HEROKU = 'http://peaceful-dawn-6588.herokuapp.com'; // No longer any plans to use Heroku
-	var LOCAL = 'http://192.168.1.141:3000';
+	var LOCAL = 'http://localhost:3000';
 	var TSERVE = 'http://tserve.noip.me:80';
-	var AMAZON = 'http://52.34.170.53:80';
+	var AMAZON = 'http://98.248.147.65:3000';
 
 	var socket;
 	// Client sided user information
@@ -31,8 +31,8 @@
 	chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 		if (message.userNameSet){
 			clientUserName = message.userNameSet;
-
-			socket = io.connect(AMAZON);
+			if(socket){socket.disconnect()}
+			socket = io.connect(LOCAL);
 
 			// Latency test
 
@@ -44,6 +44,12 @@
 				};
 				socket.emit("connected", userObject)
 			});
+
+			socket.on('userNameTaken', function(data){
+				console.log('username Taken');
+				chrome.runtime.sendMessage({userNameTaken: data.userName})
+			});
+
 
 			socket.on('server', function (data) {
 				var command = data.command;
@@ -110,9 +116,9 @@
 		// Connect request from popup
 		} else if (message.connectRequest) {
 			var message = {
-				target: parseInt(message.connectRequest.userId),
+				target: message.connectRequest.userId,
 				origin: parseInt(clientUserId),
-				key: parseInt(message.connectRequest.key)
+				key: "testest"
 			};
 
 			console.log("Connect request outbound : " + message.origin);
@@ -121,7 +127,7 @@
 		// Disconnect request from popup
 		} else if (message.disconnectRequest) {
 			var message = {
-				origin: parseInt(clientUserId)
+				origin: clientUserName
 			};
 
 			console.log("Disconnect Request");
@@ -130,9 +136,7 @@
 		// URL change request from popup
 		} else if (message.urlRequest) {
 			var msg = {
-				origin: parseInt(clientUserId),
 				URL: message.urlRequest
-
 			};
 
 			console.log("URL Request to: " + message.urlRequest);
@@ -205,6 +209,7 @@
 
 	function setActiveTab(info,tab){
 		activeTab = tab.id;
+		chrome.tabs.reload(activeTab);
 	}
 
 // Terminating brackets for encapsulating function
