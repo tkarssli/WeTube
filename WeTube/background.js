@@ -1,6 +1,5 @@
 (function() {
 
-	//var HEROKU = 'http://peaceful-dawn-6588.herokuapp.com'; // No longer any plans to use Heroku
 	var LOCAL = 'http://localhost:3000';
 	var AMAZON = 'http://52.34.170.53:3000';
 
@@ -8,8 +7,6 @@
 	// Client sided user information
 	var clientUserName = '';
 	var connectedUser = "";
-	// For calculating the average latency
-	var latency =[];
 	// Tab extension send commands to the activeTab
 	var activeTab;
 
@@ -73,8 +70,6 @@
 			socket.on("event", function (data) {
 
 				console.log("Background.js: message received");
-				data.backTime = Date.now();
-				data.avgLat += averageLatency();
 				chrome.tabs.sendMessage(activeTab, {incomingVideoEvent: data}, function(response) {});
 			});
 
@@ -173,7 +168,6 @@
 				currentTime: details.currentTime,
 				duration: details.duration,
 				paused: details.paused,
-				avgLat: averageLatency()
 			};
 			emitEvent(message);
 		}
@@ -190,16 +184,6 @@
 			console.log("Emitting event to server");
 			socket.emit("videoEvent", event);
 		}
-	};
-
-	function averageLatency(){
-		var length = latency.length;
-		var total = 0;
-
-		for(var time in latency){
-			total += parseInt(time);
-		}
-		return total/length;
 	};
 
 	function setActiveTab(info,tab){
