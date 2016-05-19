@@ -1,6 +1,6 @@
 {
   "name": "WeTube",
-  "version": "0.1.8",
+  "version": "0.2.0",
   "manifest_version": 2,
   "description": "Watch YouTube with friends.",
   "permissions": [
