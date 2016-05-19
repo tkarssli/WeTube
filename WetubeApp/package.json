@@ -1,6 +1,6 @@
 {
   "name": "WetubeServerApp",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Server for the WeTube chrom extension",
   "dependencies": {
     "express": "^4.10.2",
