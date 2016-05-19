@@ -8,9 +8,6 @@
 	var socket;
 	// Client sided user information
 	var clientUserName = '';
-	var clientUserId = 0;
-	var clientKey = 0;
-	// Currently connected user
 	var connectedUser = "";
 	// For calculating the average latency
 	var latency =[];
@@ -57,20 +54,20 @@
 				var user2 = data.user2;
 				var bool = data.bool;
 
+				console.log(data);
+
 				if (command == "connectionResult") {
 					if (bool == true) {
 						connectedUser = user2;
 						chrome.runtime.sendMessage({connectionResult: {result: true, user2: user2}});
 						console.log("Succesfully connected to " + user2)
-					} else {
-						connectedUser = "";
-						chrome.runtime.sendMessage({connectionResult: {result: false, user2: user2}});
-						console.log("Failed connecting to " + user2)
 					}
+				} else if(command == "badUser"){
+					chrome.runtime.sendMessage({"badUser": true})
+					console.log("bad user")
+
 				} else if (data.userId > 0) {
 					clientUserName = data.userName;
-					clientUserId = data.userId;
-					clientKey = data.key;
 				}
 			});
 
@@ -116,9 +113,7 @@
 		// Connect request from popup
 		} else if (message.connectRequest) {
 			var message = {
-				target: message.connectRequest.userId,
-				origin: parseInt(clientUserId),
-				key: "testest"
+				target: message.connectRequest.targetUser
 			};
 
 			console.log("Connect request outbound : " + message.origin);
@@ -150,7 +145,9 @@
 		// Get user info request from popup
 		} else if (message.getInfo){
 			// Send user info to popup.js
-			chrome.runtime.sendMessage({userInfo:{userId: clientUserId, key: clientKey, userName: clientUserName, connectedUser: connectedUser}})
+			chrome.runtime.sendMessage({userInfo:{
+				userName: clientUserName,
+				connectedUser: connectedUser}})
 		}
 	});
 
@@ -174,7 +171,6 @@
 			details = videoEvent;
 			var message =
 			{command: events[0],
-				origin: parseInt(clientUserId),
 				currentTime: details.currentTime,
 				duration: details.duration,
 				paused: details.paused,

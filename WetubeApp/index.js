@@ -53,7 +53,7 @@ io.on('connection', function(socket){
                 users[u1].emit('server', {command: "connectionResult",user2: u2, bool: true});
                 users[u2].emit('server', {command: "connectionResult",user2: u1, bool: true})
             } else {
-                console.log(u2 + " does not exist")
+                socket.emit('server', {command: "badUser"})
             }
         }
     });
