@@ -3,12 +3,13 @@ console.log("Content Script Loaded");
 // Youtube video element
 v = $('video');
 player = v.get(0);
+var paused=false;
 
 // Video Event Listeners -------------------------- //
 $(player).on('play', function(){
     console.log("play click");
 
-    if(!player.seeking){
+
         chrome.runtime.sendMessage({
             videoEvent: {
                 'currentTime': player.currentTime,
@@ -16,21 +17,30 @@ $(player).on('play', function(){
                 'paused': player.paused
             }
         });
+});
+
+// Check 4 times per second if video is paused
+console.log('first' + player.paused);
+
+
+var checkPaused = function(){
+    //console.log(player.paused);
+    if(player.paused && !(paused == player.paused)) {
+        paused = true;
+        chrome.runtime.sendMessage({
+            videoEvent: {
+                'currentTime': player.currentTime,
+                'duration': player.duration,
+                'paused': player.paused
+            }
+        });
+        console.log('paused')
+    } else if(!player.paused && !(paused == player.paused)) {
+        paused = false;
     }
-});
+};
 
-$(player).on('pause', function(){
-    console.log("pause click");
-
-    chrome.runtime.sendMessage({
-        videoEvent: {
-            'currentTime': player.currentTime,
-            'duration': player.duration,
-            'paused': player.paused
-        }
-    });
-});
-
+setInterval(checkPaused, 500);
 //------------------------------------------/
 // Event Dispatchers
 
